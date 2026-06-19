@@ -11,6 +11,9 @@ __pycache__/
 .venv/
 venv/
 
+# claude code local settings (machine-specific, not shared)
+.claude/settings.local.json
+
 # os
 Thumbs.db
 .DS_Store
