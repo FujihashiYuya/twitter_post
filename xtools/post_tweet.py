@@ -53,9 +53,15 @@ def post_due(
             continue
         if client is None:
             client = XClient(make_session())
+        # NOTE: if post_thread fails partway through a thread (e.g. tweet 2 errors after
+        # tweet 1 posted), no ledger/frontmatter update happens and the whole thread is
+        # retried on the next run, duplicating tweet 1. Threads are rare for this account;
+        # accepted as a documented limitation rather than adding partial-progress recovery.
         tweet_ids = client.post_thread(post.tweets)
         posted_at = now.isoformat()
         ledger[name] = {"tweet_ids": tweet_ids, "posted_at": posted_at}
+        # Ledger is written before frontmatter/commit so a crash leaves a recoverable state.
+        # With multiple due posts each is committed individually so one failure doesn't lose earlier posts.
         save_ledger(ledger, ledger_path)
         postfile.update_frontmatter(
             post.path,
@@ -80,8 +86,12 @@ def main(argv=None):
     parser.add_argument("--now", help="override current time (ISO8601), for testing")
     parser.add_argument("--no-git", action="store_true", help="do not commit/push")
     args = parser.parse_args(argv)
-
+    if not args.due_now:
+        print("Nothing to do. Pass --due-now to post approved & due tweets (optionally --dry-run).")
+        return
     now = datetime.fromisoformat(args.now) if args.now else datetime.now(JST)
+    if now.tzinfo is None:
+        now = now.replace(tzinfo=JST)
     results = post_due(now=now, dry_run=args.dry_run, do_git=not args.no_git)
 
     if not results:

@@ -78,3 +78,4 @@ def test_post_due_dry_run_does_not_post(tmp_path):
     )
     assert results == [("a.md", "dry-run", [])]
     assert client.calls == []
+    assert not ledger.exists()
