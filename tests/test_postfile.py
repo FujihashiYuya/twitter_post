@@ -82,3 +82,77 @@ def test_parse_legacy_file_without_frontmatter(tmp_path):
     post = parse_post(p)
     assert post.status == ""
     assert post.scheduled_at is None
+
+
+from datetime import datetime, timezone, timedelta
+from xtools.postfile import (
+    is_due, find_due_posts, overlength_tweets, update_frontmatter,
+    parse_post, STATUS_POSTED,
+)
+
+JST = timezone(timedelta(hours=9))
+
+
+def test_is_due_true_when_approved_past_and_unposted(tmp_path):
+    p = _write(tmp_path, "a.md", """\
+        ---
+        status: 承認済み
+        scheduled_at: "2026-06-20T09:00:00+09:00"
+        thread: false
+        tweet_ids: []
+        ---
+        # 投稿文
+        本文
+        """)
+    post = parse_post(p)
+    assert is_due(post, datetime(2026, 6, 20, 9, 0, tzinfo=JST)) is True
+    assert is_due(post, datetime(2026, 6, 20, 8, 0, tzinfo=JST)) is False
+
+
+def test_is_due_false_when_already_has_tweet_ids(tmp_path):
+    p = _write(tmp_path, "a.md", """\
+        ---
+        status: 承認済み
+        scheduled_at: "2026-06-20T09:00:00+09:00"
+        thread: false
+        tweet_ids: ["123"]
+        ---
+        # 投稿文
+        本文
+        """)
+    post = parse_post(p)
+    assert is_due(post, datetime(2026, 6, 21, 9, 0, tzinfo=JST)) is False
+
+
+def test_overlength_detects_too_long(tmp_path):
+    p = _write(tmp_path, "a.md", f"""\
+        ---
+        status: 承認済み
+        thread: false
+        tweet_ids: []
+        ---
+        # 投稿文
+        {"あ" * 141}
+        """)
+    post = parse_post(p)
+    assert overlength_tweets(post) == [(0, 282)]
+
+
+def test_update_frontmatter_preserves_body(tmp_path):
+    p = _write(tmp_path, "a.md", """\
+        ---
+        status: 承認済み
+        scheduled_at: "2026-06-20T09:00:00+09:00"
+        thread: false
+        tweet_ids: []
+        ---
+
+        # 投稿文
+
+        本文はそのまま
+        """)
+    update_frontmatter(p, status=STATUS_POSTED, posted_at="2026-06-20T09:00:01+09:00", tweet_ids=["999"])
+    reparsed = parse_post(p)
+    assert reparsed.status == STATUS_POSTED
+    assert reparsed.tweet_ids == ["999"]
+    assert reparsed.tweets == ["本文はそのまま"]
