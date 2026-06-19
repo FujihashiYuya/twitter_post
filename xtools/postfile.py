@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 from pathlib import Path
 
 import yaml
@@ -14,11 +14,13 @@ STATUS_APPROVED = "承認済み"
 STATUS_POSTED = "投稿済み"
 STATUS_REJECTED = "却下"
 
+JST = timezone(timedelta(hours=9))
+
 _FRONTMATTER_RE = re.compile(r"^---\s*\n(.*?)\n---\s*\n(.*)$", re.DOTALL)
 _THREAD_SEP_RE = re.compile(r"(?m)^={3,}\s*$")
-_META_HEADING_RE = re.compile(r"(?m)^##\s+メタ情報.*")
+_META_HEADING_RE = re.compile(r"(?m)^##\s+メタ情報.*")  # Sentinel that ends the tweet region. Assumes tweet text never starts a line with "## メタ情報".
 _TITLE_HEADING_RE = re.compile(r"(?m)^#\s+投稿文\s*$")
-_HR_RE = re.compile(r"(?m)^-{3,}\s*$")
+_HR_RE = re.compile(r"(?m)^-{3,}\s*$")  # Strips Markdown horizontal rules (---) used as template separators. Note: a legitimate --- inside tweet content would also be stripped.
 
 
 def weighted_length(text: str) -> int:
@@ -44,7 +46,7 @@ class PostFile:
     scheduled_at: datetime | None
     category: str | None
     thread: bool
-    posted_at: str | None
+    posted_at: str | None  # Intentionally stored as a string: written once at post time, never compared in logic.
     tweet_ids: list[str]
     tweets: list[str]
     raw_frontmatter: dict
@@ -74,9 +76,10 @@ def split_tweets(region: str, thread: bool) -> list[str]:
 def _parse_dt(value) -> datetime | None:
     if value is None or value == "":
         return None
-    if isinstance(value, datetime):
-        return value
-    return datetime.fromisoformat(str(value))
+    dt = value if isinstance(value, datetime) else datetime.fromisoformat(str(value))
+    if dt.tzinfo is None:
+        dt = dt.replace(tzinfo=JST)
+    return dt
 
 
 def parse_post(path) -> PostFile:
@@ -97,9 +100,12 @@ def parse_post(path) -> PostFile:
 
 
 def is_due(post: PostFile, now: datetime) -> bool:
+    if post.scheduled_at is None:
+        return False
+    if now.tzinfo is None:
+        now = now.replace(tzinfo=JST)
     return (
         post.status == STATUS_APPROVED
-        and post.scheduled_at is not None
         and post.scheduled_at <= now
         and not post.tweet_ids
     )
@@ -115,11 +121,12 @@ def find_due_posts(post_dir, now: datetime) -> list[PostFile]:
 
 
 def overlength_tweets(post: PostFile) -> list[tuple[int, int]]:
-    return [
-        (i, weighted_length(t))
-        for i, t in enumerate(post.tweets)
-        if weighted_length(t) > MAX_WEIGHTED_LEN
-    ]
+    result = []
+    for i, t in enumerate(post.tweets):
+        wl = weighted_length(t)
+        if wl > MAX_WEIGHTED_LEN:
+            result.append((i, wl))
+    return result
 
 
 def update_frontmatter(path, **updates) -> None:
@@ -130,5 +137,8 @@ def update_frontmatter(path, **updates) -> None:
         raise ValueError(f"No frontmatter to update in {path}")
     fm = yaml.safe_load(m.group(1)) or {}
     fm.update(updates)
+    for k, v in list(fm.items()):
+        if isinstance(v, datetime):
+            fm[k] = v.isoformat()
     new_fm = yaml.safe_dump(fm, allow_unicode=True, sort_keys=False, default_flow_style=False)
     path.write_text(f"---\n{new_fm}---\n{m.group(2)}", encoding="utf-8")
