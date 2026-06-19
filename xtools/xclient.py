@@ -22,7 +22,10 @@ class XClient:
         resp = self.session.post(f"{self.base}/tweets", json=payload, timeout=30)
         if resp.status_code != 201:
             raise XAPIError(resp.status_code, resp.text)
-        return resp.json()["data"]["id"]
+        try:
+            return resp.json()["data"]["id"]
+        except (KeyError, ValueError) as exc:
+            raise XAPIError(resp.status_code, f"Unexpected response body: {resp.text}") from exc
 
     def post_thread(self, tweets: list[str]) -> list[str]:
         ids: list[str] = []
@@ -34,7 +37,7 @@ class XClient:
         return ids
 
     def get_metrics(self, tweet_ids: list[str]) -> dict:
-        fields = "public_metrics,non_public_metrics,created_at"
+        fields = "public_metrics,non_public_metrics,created_at"  # non_public_metrics requires user-context OAuth 1.0a + tweet ownership
         results: dict = {}
         for i in range(0, len(tweet_ids), 100):
             batch = tweet_ids[i : i + 100]
@@ -45,6 +48,10 @@ class XClient:
             )
             if resp.status_code != 200:
                 raise XAPIError(resp.status_code, resp.text)
+            # X may return partial results: ids for deleted/unauthorized tweets appear
+            # in resp.json().get("errors", []) and are intentionally omitted here.
             for item in resp.json().get("data", []):
-                results[item["id"]] = item
+                tid = item.get("id")
+                if tid:
+                    results[tid] = item
         return results
