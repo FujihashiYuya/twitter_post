@@ -60,3 +60,48 @@ def test_fetch_appends_second_snapshot(tmp_path):
     with csv_path.open(encoding="utf-8") as f:
         records = list(csv.DictReader(f))
     assert len(records) == 2  # two weekly snapshots
+
+
+def test_fetch_writes_header_when_csv_is_empty_file(tmp_path):
+    _posted(tmp_path, "a.md", "100")
+    csv_path = tmp_path / "metrics_log.csv"
+    csv_path.write_text("", encoding="utf-8")  # pre-existing 0-byte file
+    client = FakeMetricsClient({"100": {"public_metrics": {"impression_count": 5}}})
+    fetch_metrics.fetch(now=datetime(2026, 6, 21, 12, 0, tzinfo=JST), client=client, post_dir=tmp_path, csv_path=csv_path)
+    with csv_path.open(encoding="utf-8") as f:
+        records = list(csv.DictReader(f))
+    assert records[0]["impressions"] == "5"  # header present -> DictReader maps correctly
+
+
+def test_fetch_weekday_uses_jst_for_utc_posted_at(tmp_path):
+    _posted(tmp_path, "a.md", "100", posted_at="2026-06-19T23:30:00+00:00")
+    csv_path = tmp_path / "metrics_log.csv"
+    client = FakeMetricsClient({"100": {"public_metrics": {"impression_count": 1}}})
+    fetch_metrics.fetch(now=datetime(2026, 6, 21, 12, 0, tzinfo=JST), client=client, post_dir=tmp_path, csv_path=csv_path)
+    with csv_path.open(encoding="utf-8") as f:
+        rec = list(csv.DictReader(f))[0]
+    assert rec["posted_weekday"] == "土"   # 2026-06-19 23:30 UTC == 2026-06-20 08:30 JST (Sat)
+    assert rec["posted_hour"] == "8"
+
+
+def test_fetch_malformed_posted_at_does_not_crash(tmp_path):
+    import textwrap
+    p = tmp_path / "bad.md"
+    p.write_text(textwrap.dedent("""\
+        ---
+        status: 投稿済み
+        thread: false
+        posted_at: "not-a-date"
+        tweet_ids: ["100"]
+        ---
+        # 投稿文
+        本文
+        """), encoding="utf-8")
+    csv_path = tmp_path / "metrics_log.csv"
+    client = FakeMetricsClient({"100": {"public_metrics": {"impression_count": 7}}})
+    rows = fetch_metrics.fetch(now=datetime(2026, 6, 21, 12, 0, tzinfo=JST), client=client, post_dir=tmp_path, csv_path=csv_path)
+    assert len(rows) == 1
+    with csv_path.open(encoding="utf-8") as f:
+        rec = list(csv.DictReader(f))[0]
+    assert rec["posted_weekday"] == ""
+    assert rec["impressions"] == "7"

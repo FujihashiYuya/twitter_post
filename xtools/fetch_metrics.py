@@ -1,14 +1,15 @@
 import argparse
 import csv
-from datetime import datetime, timezone, timedelta
+from datetime import datetime
 from pathlib import Path
 
 from xtools import postfile
 from xtools.auth import make_session
+from xtools.postfile import JST
 from xtools.xclient import XClient
 
-JST = timezone(timedelta(hours=9))
 REPO_ROOT = Path(__file__).resolve().parent.parent
+EXCERPT_MAX_CHARS = 30
 POST_DIR = REPO_ROOT / "post"
 CSV_PATH = REPO_ROOT / "analysis" / "metrics_log.csv"
 
@@ -33,15 +34,25 @@ def collect_posted(post_dir):
 def _row(post, tweet_id, metric, collected_at):
     pub = metric.get("public_metrics", {})
     nonpub = metric.get("non_public_metrics", {})
-    posted_dt = postfile._parse_dt(post.posted_at)
-    weekday = WEEKDAYS[posted_dt.weekday()] if posted_dt else ""
-    hour = posted_dt.astimezone(JST).hour if posted_dt else ""
-    excerpt = (post.tweets[0][:30] if post.tweets else "").replace("\n", " ")
+    try:
+        posted_dt = postfile._parse_dt(post.posted_at)
+    except ValueError:
+        posted_dt = None
+    if posted_dt is not None:
+        posted_jst = posted_dt.astimezone(JST)
+        weekday = WEEKDAYS[posted_jst.weekday()]
+        hour = str(posted_jst.hour)
+        posted_at_str = posted_dt.isoformat()
+    else:
+        weekday = ""
+        hour = ""
+        posted_at_str = post.posted_at if isinstance(post.posted_at, str) else ""
+    excerpt = (post.tweets[0][:EXCERPT_MAX_CHARS] if post.tweets else "").replace("\n", " ")
     return {
         "collected_at": collected_at,
         "tweet_id": tweet_id,
         "file": post.path.name,
-        "posted_at": post.posted_at or "",
+        "posted_at": posted_at_str,
         "posted_weekday": weekday,
         "posted_hour": hour,
         "category": post.category or "",
@@ -58,12 +69,13 @@ def _row(post, tweet_id, metric, collected_at):
 
 
 def append_rows(rows, csv_path):
+    if not rows:
+        return
     csv_path = Path(csv_path)
     csv_path.parent.mkdir(parents=True, exist_ok=True)
-    new_file = not csv_path.exists()
     with csv_path.open("a", newline="", encoding="utf-8") as f:
         writer = csv.DictWriter(f, fieldnames=CSV_COLUMNS)
-        if new_file:
+        if f.tell() == 0:
             writer.writeheader()
         writer.writerows(rows)
 
@@ -75,6 +87,8 @@ def fetch(now=None, client=None, post_dir=POST_DIR, csv_path=CSV_PATH, dry_run=F
     all_ids = []
     for post in collect_posted(post_dir):
         for tid in post.tweet_ids:
+            if tid in id_to_post:
+                continue  # dedupe: a tweet_id seen in an earlier file wins
             id_to_post[tid] = post
             all_ids.append(tid)
     if not all_ids or dry_run:
