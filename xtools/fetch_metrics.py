@@ -56,7 +56,7 @@ def _row(post, tweet_id, metric, collected_at):
         "posted_weekday": weekday,
         "posted_hour": hour,
         "category": post.category or "",
-        "impressions": pub.get("impression_count", ""),
+        "impressions": nonpub.get("impression_count", pub.get("impression_count", "")),
         "likes": pub.get("like_count", ""),
         "retweets": pub.get("retweet_count", ""),
         "replies": pub.get("reply_count", ""),

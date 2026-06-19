@@ -84,6 +84,25 @@ def test_fetch_weekday_uses_jst_for_utc_posted_at(tmp_path):
     assert rec["posted_hour"] == "8"
 
 
+def test_fetch_reads_impressions_from_non_public_metrics(tmp_path):
+    _posted(tmp_path, "a.md", "100")
+    csv_path = tmp_path / "metrics_log.csv"
+    client = FakeMetricsClient({
+        "100": {
+            "public_metrics": {"like_count": 4},
+            "non_public_metrics": {"impression_count": 1234, "url_link_clicks": 7, "user_profile_clicks": 2},
+        }
+    })
+    fetch_metrics.fetch(now=datetime(2026, 6, 21, 12, 0, tzinfo=JST), client=client, post_dir=tmp_path, csv_path=csv_path)
+    import csv as _csv
+    with csv_path.open(encoding="utf-8") as f:
+        rec = list(_csv.DictReader(f))[0]
+    assert rec["impressions"] == "1234"
+    assert rec["likes"] == "4"
+    assert rec["url_link_clicks"] == "7"
+    assert rec["profile_clicks"] == "2"
+
+
 def test_fetch_malformed_posted_at_does_not_crash(tmp_path):
     import textwrap
     p = tmp_path / "bad.md"

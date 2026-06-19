@@ -42,7 +42,7 @@ def post_due(
     for post in postfile.find_due_posts(post_dir, now):
         name = post.path.name
         if name in ledger:
-            results.append((name, "skip-ledger", ledger[name]["tweet_ids"]))
+            results.append((name, "skip-ledger", ledger[name].get("tweet_ids", [])))
             continue
         over = postfile.overlength_tweets(post)
         if over:
