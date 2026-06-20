@@ -1259,13 +1259,16 @@ git commit -m "feat(fetch_metrics): collect metrics into time-series CSV"
 ### Task 6.1: アプリ作成とOAuth1.0aトークン発行
 
 - [ ] **Step 1:** [X Developer Portal](https://developer.x.com/) でDeveloperアカウントを取得（無料枠廃止のため、サインアップ時に**従量課金（pay-per-use）**へ進む）。
-- [ ] **Step 2:** 支払い方法（カード）を登録。請求は投稿$0.01/件・読取$0.005/件の従量。
-- [ ] **Step 3:** Project と App を作成。
-- [ ] **Step 4:** App settings → User authentication settings で **App permissions = Read and write** に設定（投稿に必須）。
-- [ ] **Step 5:** Keys and tokens タブで以下を発行・控える:
+- [ ] **Step 2:** 支払い方法（カード）を登録しクレジット購入。請求は投稿$0.015/件（URL含む$0.20/件）・読取$0.005/件・自分データ読取$0.001/件の従量。
+- [ ] **Step 3:** **Project を作成 → その配下に App を作成**（v2投稿はProject必須。未所属だと403）。
+- [ ] **Step 4:** App → Settings → User authentication settings で:
+  - **OAuth 1.0a を ON**、**App permissions = Read and write**（既定のReadだと投稿が403）
+  - Callback URI / Website URL は必須項目だが、**自己トークン発行では未使用**（ドメイン取得・ngrok不要）。Callback例 `http://localhost:3000/callback`、Website例 自分のXプロフィール等の実在https URL。
+- [ ] **Step 5:** Keys and tokens タブで以下を発行・控える（**生成時のみ表示**）:
   - API Key / API Secret（= Consumer Keys）
-  - Access Token / Access Token Secret（**自分のアカウント用**。Read and write 権限のもの）
-- [ ] **Step 6:** ローカルで疎通確認。PowerShellで環境変数を設定し、最小投稿（1件$0.01）で確認:
+  - Access Token / Access Token Secret（**自分のアカウント用**・長期有効・失効/更新なし）
+  - ⚠️ 権限を Read and write にした**後**で Access Token を**再生成**（権限変更前のトークンはread-onlyのまま→投稿403）
+- [ ] **Step 6:** ローカルで疎通確認。PowerShellで環境変数を設定し、最小投稿（テキスト1件$0.015）で確認:
   ```
   $env:X_API_KEY="..."; $env:X_API_SECRET="..."; $env:X_ACCESS_TOKEN="..."; $env:X_ACCESS_TOKEN_SECRET="..."
   python -c "from xtools.auth import make_session; from xtools.xclient import XClient; print(XClient(make_session()).create_tweet('テスト投稿（自動化疎通確認）'))"
@@ -1278,7 +1281,7 @@ git commit -m "feat(fetch_metrics): collect metrics into time-series CSV"
 
 ## Phase 7: Claude routines 設定（手動）
 
-> 前提: Phase 0〜5 完了済みのリポジトリを **GitHubプライベートリポジトリ** にpush済みであること。
+> 前提: Phase 0〜5 完了済みのリポジトリを **GitHubプライベートリポジトリ** にpush済みであること。さらに CLI で `/web-setup` を実行し、claude.ai に GitHub を接続しておく（routine がリポジトリを clone できるようにするため）。
 
 ### Task 7.1: GitHubへpush
 
@@ -1292,14 +1295,16 @@ git commit -m "feat(fetch_metrics): collect metrics into time-series CSV"
 
 ### Task 7.2: routine A（毎日の投稿）
 
-- [ ] **Step 1:** `/schedule` で新規routineを作成し、対象リポジトリに上記GitHubリポジトリを指定。
-- [ ] **Step 2:** スケジュール: cron `0 9,12,15,18,20,22 * * *` / timezone `Asia/Tokyo`。
+- [ ] **Step 1:** [claude.ai/code/routines](https://claude.ai/code/routines) の「New routine」で作成し、対象リポジトリに上記GitHubリポジトリを指定。
+- [ ] **Step 1b（重要）:** 当該リポジトリで **「Allow unrestricted branch pushes（既存ブランチへのpush許可）」を有効化**。routineは既定では `claude/` 始まりのブランチにしかpushできず、本設計の main への書き戻し（投稿済みステータス・分析レポート）が反映されないため必須。
+- [ ] **Step 2:** スケジュール: cron `0 9,12,15,18,20,22 * * *` / timezone `Asia/Tokyo`。Webプリセット（毎時/毎日/毎週）にこの6時刻パターンは無いので、作成後に CLI で **`/schedule update`** してcron式を設定（端末がJSTなら現地時刻=JSTで適用）。
 - [ ] **Step 3:** 環境変数（routine環境）に登録: `X_API_KEY` / `X_API_SECRET` / `X_ACCESS_TOKEN` / `X_ACCESS_TOKEN_SECRET`。
 - [ ] **Step 4:** 許可ドメインに `api.x.com` と `api.twitter.com` を追加。
 - [ ] **Step 5:** セットアップコマンド: `pip install -r requirements.txt`。
 - [ ] **Step 6:** プロンプトを以下に設定:
   > リポジトリルートで `python -m xtools.post_tweet --due-now` を実行せよ。このスクリプトは承認済みかつ投稿時刻が到来した投稿のみをXに投稿し、ファイル更新・台帳更新・commit・pushまで自身で行う。実行後、投稿/スキップ/失敗の結果を1〜2行で要約せよ。スクリプトが非ゼロ終了した場合はエラー内容を報告し、**手動で投稿し直さないこと**。
-- [ ] **Step 7:** one-off実行で疎通確認（承認済み&dueの投稿が無ければ "No due posts." となること）。問題なければスケジュール有効化。
+- [ ] **Step 7:** one-off実行（routine詳細の「Run now」）で疎通確認（承認済み&dueの投稿が無ければ "No due posts." となること）。問題なければスケジュール有効化。
+  > 注: Max plan の routine 実行上限は 1日15回。routine A は6回/日でこの範囲内（残りは手動テスト等に使える）。
 
 ### Task 7.3: routine B（週次分析）
 
