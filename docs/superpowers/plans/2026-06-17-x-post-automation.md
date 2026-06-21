@@ -1279,7 +1279,11 @@ git commit -m "feat(fetch_metrics): collect metrics into time-series CSV"
 
 ---
 
-## Phase 7: Claude routines 設定（手動）
+## Phase 7: スケジュール実行（GitHub Actions・実装済み）
+
+> **更新（2026-06-22）**: 決定論処理の確実性・無料・制約回避（cwd/ブランチpush/実行上限）のため、当初の Claude routines から **GitHub Actions に変更**して実装・本番検証済み。実体は `.github/workflows/post.yml`（投稿）と `metrics.yml`（週次指標）、Secrets 4つ、週次分析は `/analyze-x-week` スキル。以下の Claude routines 手順は参考として残す（実際には未使用）。
+
+### （参考・未使用）Claude routines 設定
 
 > 前提: Phase 0〜5 完了済みのリポジトリを **GitHubプライベートリポジトリ** にpush済みであること。さらに CLI で `/web-setup` を実行し、claude.ai に GitHub を接続しておく（routine がリポジトリを clone できるようにするため）。
 

@@ -60,10 +60,12 @@ tweet_ids: []               # 自動投稿後に自動記入
 - 投稿は Claude routine が自動実行し、完了後に `status: 投稿済み` ＋ `tweet_ids` を自動記入
 - 却下した案も記録として残す（`status: 却下`）
 
-### 投稿自動化（概要）
-- 作成: `/create-x-post` スキルで下書き生成
-- 投稿: routine A（毎日 9/12/15/18/20/22時 JST）が `xtools/post_tweet.py` を実行
-- 週次分析: routine B（日曜12時 JST）が `xtools/fetch_metrics.py` ＋ 分析レポート生成
+### 投稿自動化（概要）— GitHub Actions で実行
+- 作成: `/create-x-post` スキルで下書き生成 → レビューし `status: 承認済み`＋`scheduled_at` を設定して push（週まとめて事前承認）
+- 投稿: **GitHub Actions `post.yml`**（毎日 9/12/15/18/20/22時 JST = UTC 0,3,6,9,11,13）が `xtools/post_tweet.py` を実行し、投稿＋`status: 投稿済み`書き戻し
+- 指標収集: **GitHub Actions `metrics.yml`**（日曜12時 JST）が `xtools/fetch_metrics.py` で `analysis/metrics_log.csv` に追記
+- 週次分析: 必要なときに **`/analyze-x-week` スキル**でローカル生成（Max plan内・追加課金なし）
+- 認証: X の4キーは GitHub の暗号化 Secrets に登録（`.env` はローカル検証用・gitignore）
 - 詳細: `docs/superpowers/specs/2026-06-17-x-post-automation-design.md`
 
 ## アカウント方針サマリー
