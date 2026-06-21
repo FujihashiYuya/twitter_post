@@ -1,0 +1,51 @@
+name: fetch-metrics
+
+# 週次の指標収集: 投稿済みツイートの指標を取得し analysis/metrics_log.csv に追記。
+# 日曜 12:00 JST = 日曜 03:00 UTC。
+# 分析レポートの執筆は自動化しない（必要なときにローカルのClaude Codeで /analyze-x-week を実行）。
+on:
+  schedule:
+    - cron: "0 3 * * 0"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: x-automation
+  cancel-in-progress: false
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+      - name: Configure git
+        run: |
+          git config user.name "x-automation-bot"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+      - name: Fetch weekly metrics snapshot
+        env:
+          X_API_KEY: ${{ secrets.X_API_KEY }}
+          X_API_SECRET: ${{ secrets.X_API_SECRET }}
+          X_ACCESS_TOKEN: ${{ secrets.X_ACCESS_TOKEN }}
+          X_ACCESS_TOKEN_SECRET: ${{ secrets.X_ACCESS_TOKEN_SECRET }}
+        run: python -m xtools.fetch_metrics
+      - name: Commit & push metrics
+        run: |
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No metrics changes (no posted tweets yet)."
+            exit 0
+          fi
+          git commit -m "chore(x): weekly metrics snapshot"
+          git pull --rebase origin main
+          git push

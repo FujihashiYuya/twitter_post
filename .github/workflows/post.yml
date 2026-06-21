@@ -1,0 +1,52 @@
+name: post-tweets
+
+# 投稿: 承認済み & scheduled_at が到来した投稿だけをXに投稿し、結果をmainへ書き戻す。
+# GitHub Actions の cron は UTC 固定。JST 9/12/15/18/20/22時 = UTC 0/3/6/9/11/13時 (UTC+9)。
+# スクリプト内部は JST で due 判定するため、投稿時刻は正しく出る。
+on:
+  schedule:
+    - cron: "0 0,3,6,9,11,13 * * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+# 投稿用と指標用ワークフローを直列化し、main への push 競合を防ぐ
+concurrency:
+  group: x-automation
+  cancel-in-progress: false
+
+jobs:
+  post:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+      - name: Configure git
+        run: |
+          git config user.name "x-automation-bot"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+      - name: Post approved & due tweets
+        env:
+          X_API_KEY: ${{ secrets.X_API_KEY }}
+          X_API_SECRET: ${{ secrets.X_API_SECRET }}
+          X_ACCESS_TOKEN: ${{ secrets.X_ACCESS_TOKEN }}
+          X_ACCESS_TOKEN_SECRET: ${{ secrets.X_ACCESS_TOKEN_SECRET }}
+        run: python -m xtools.post_tweet --due-now --no-git
+      - name: Commit & push status write-back
+        run: |
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No changes to commit (no posts went out)."
+            exit 0
+          fi
+          git commit -m "chore(x): record posted tweets"
+          git pull --rebase origin main
+          git push
