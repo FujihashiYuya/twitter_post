@@ -1,0 +1,18 @@
+---
+status: 下書き
+scheduled_at:
+category: 技術ログ
+thread: false
+posted_at:
+tweet_ids: []
+---
+
+# 投稿文
+
+JWTで一番ハマる誤解：decodeとverifyは別物。payloadはBase64なだけで誰でも読めるし、jwt-decode系は署名を見ない。だから「期限内か」しか分からず、claimを書き換えた偽トークンも通る。本物の保証は毎リクエストの署名検証(verify)の方だと痛感した。
+
+## メタ情報
+- 作成日: 2026-06-24
+- カテゴリ: 技術ログ
+- 文字数: 約120
+- ステータス: 下書き
