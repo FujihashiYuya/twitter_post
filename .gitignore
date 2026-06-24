@@ -14,6 +14,12 @@ venv/
 # claude code local settings (machine-specific, not shared)
 .claude/settings.local.json
 
+# confidential source analysis (other project's resource notes — do NOT publish)
+docs/source/
+
+# dropped-in screenshots (local only)
+スクリーンショット*.png
+
 # os
 Thumbs.db
 .DS_Store
