@@ -245,6 +245,22 @@ def test_reconcile_matches_despite_tco_links_and_html_escape(tmp_path):
     assert post.tweet_ids == ["500"]
 
 
+def test_fetch_prefers_public_impressions_when_nonpub_zeroed(tmp_path):
+    # APIプランによって non_public_metrics がゼロ埋めで返るケース（実測）
+    _posted(tmp_path, "a.md", "100")
+    csv_path = tmp_path / "metrics_log.csv"
+    client = FakeMetricsClient({
+        "100": {
+            "public_metrics": {"impression_count": 24, "like_count": 0},
+            "non_public_metrics": {"impression_count": 0, "url_link_clicks": 0},
+        }
+    })
+    fetch_metrics.fetch(now=datetime(2026, 6, 21, 12, 0, tzinfo=JST), client=client, post_dir=tmp_path, csv_path=csv_path)
+    with csv_path.open(encoding="utf-8") as f:
+        rec = list(csv.DictReader(f))[0]
+    assert rec["impressions"] == "24"
+
+
 def test_fetch_malformed_posted_at_does_not_crash(tmp_path):
     import textwrap
     p = tmp_path / "bad.md"

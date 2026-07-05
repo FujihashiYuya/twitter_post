@@ -101,6 +101,10 @@ def reconcile(client, post_dir=POST_DIR, scheduled=None):
 def _row(post, tweet_id, metric, collected_at):
     pub = metric.get("public_metrics", {})
     nonpub = metric.get("non_public_metrics", {})
+    # APIプランによっては non_public_metrics が「ゼロ埋めで返る」（実測）。
+    # キー存在でのフォールバックでは 0 に潰されるため、両方のうち大きい方を採用する。
+    imp = [v for v in (nonpub.get("impression_count"), pub.get("impression_count"))
+           if isinstance(v, int)]
     try:
         posted_dt = postfile._parse_dt(post.posted_at)
     except ValueError:
@@ -123,7 +127,7 @@ def _row(post, tweet_id, metric, collected_at):
         "posted_weekday": weekday,
         "posted_hour": hour,
         "category": post.category or "",
-        "impressions": nonpub.get("impression_count", pub.get("impression_count", "")),
+        "impressions": max(imp) if imp else "",
         "likes": pub.get("like_count", ""),
         "retweets": pub.get("retweet_count", ""),
         "replies": pub.get("reply_count", ""),
