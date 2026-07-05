@@ -1,11 +1,17 @@
 name: post-tweets
 
 # 投稿: 承認済み & scheduled_at が到来した投稿だけをXに投稿し、結果をmainへ書き戻す。
-# GitHub Actions の cron は UTC 固定。JST 9/12/15/18/20/22時 = UTC 0/3/6/9/11/13時 (UTC+9)。
-# スクリプト内部は JST で due 判定するため、投稿時刻は正しく出る。
+#
+# 定時起動は外部スケジューラ (cron-job.org) から GitHub API で workflow_dispatch を叩く
+# （起動<1秒＝分単位で正確。news-paper リポジトリで実証済みのパターン）。
+# GitHub の schedule は混雑時に数時間遅延するため使わない（撤去済み・二重投稿防止も兼ねる）。
+# cron-job.org 側: 毎日 9/12/15/18/20/22時 JST に
+#   POST https://api.github.com/repos/<owner>/twitter_post/actions/workflows/post.yml/dispatches
+#   Headers: Authorization: Bearer <fine-grained PAT (このrepo限定/Actions:RW)>
+#            Accept: application/vnd.github+json / X-GitHub-Api-Version: 2022-11-28
+#   Body: {"ref":"main"}
+# due 判定はスクリプト内部で JST で行うため、発火が数分遅れても投稿は正しく出る。
 on:
-  schedule:
-    - cron: "0 0,3,6,9,11,13 * * *"
   workflow_dispatch: {}
 
 permissions:

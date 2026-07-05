@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>X運用 移行サマリー（2026-07-05）</title>
+<style>
+  :root {
+    --bg: #f6f8fa; --card: #ffffff; --ink: #1f2328; --sub: #57606a;
+    --accent: #0969da; --ok: #1a7f37; --warn: #9a6700; --del: #cf222e;
+    --border: #d0d7de;
+  }
+  * { box-sizing: border-box; }
+  body { font-family: "Hiragino Sans", "Yu Gothic UI", "Meiryo", sans-serif;
+         background: var(--bg); color: var(--ink); margin: 0; padding: 32px 16px; line-height: 1.7; }
+  .wrap { max-width: 980px; margin: 0 auto; }
+  h1 { font-size: 26px; margin: 0 0 4px; }
+  .date { color: var(--sub); font-size: 14px; margin-bottom: 24px; }
+  h2 { font-size: 19px; border-left: 5px solid var(--accent); padding-left: 10px; margin: 36px 0 12px; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 10px;
+          padding: 18px 22px; margin-bottom: 16px; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th, td { border: 1px solid var(--border); padding: 9px 12px; text-align: left; vertical-align: top; }
+  th { background: #eef2f6; font-weight: 600; }
+  td.before { background: #fff8f8; }
+  td.after  { background: #f4fbf5; }
+  .tag { display: inline-block; font-size: 11px; font-weight: 700; border-radius: 999px;
+         padding: 1px 10px; margin-right: 6px; vertical-align: middle; }
+  .tag.same { background: #ddf4ff; color: var(--accent); }
+  .tag.new  { background: #dafbe1; color: var(--ok); }
+  .tag.del  { background: #ffebe9; color: var(--del); }
+  .tag.todo { background: #fff8c5; color: var(--warn); }
+  .flow { display: flex; flex-wrap: wrap; align-items: stretch; gap: 8px; margin: 10px 0; }
+  .node { background: #eef2f6; border: 1px solid var(--border); border-radius: 8px;
+          padding: 8px 12px; font-size: 13px; flex: 1 1 150px; text-align: center; }
+  .node b { display: block; font-size: 13.5px; }
+  .node small { color: var(--sub); }
+  .arrow { align-self: center; color: var(--sub); font-size: 18px; flex: 0 0 auto; }
+  .node.hl { background: #ddf4ff; border-color: var(--accent); }
+  .node.ai { background: #fbefff; border-color: #8250df; }
+  ul { margin: 6px 0; padding-left: 22px; }
+  li { margin: 3px 0; }
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 720px) { .cols { grid-template-columns: 1fr; } .arrow { display:none; } }
+  .muted { color: var(--sub); font-size: 13px; }
+  code { background: #eef2f6; border-radius: 4px; padding: 1px 6px; font-size: 13px;
+         font-family: Consolas, monospace; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>X運用 移行サマリー</h1>
+<div class="date">2026-07-05 ／ @FujihashiYuya ／ 方法A（X純正手動予約）→ 方法B'（cron-job.org → GitHub Actions 自動投稿）</div>
+
+<h2>1. 変わらないもの（戦略のコア）</h2>
+<div class="card">
+  <span class="tag same">維持</span>方針の本体はそのまま。今回変わるのは<b>実行形態（配管）だけ</b>。
+  <ul>
+    <li><b>コアメッセージ</b>：「技術を理解し、考え、形にし続けるエンジニアの記録」（実名・誠実・実直）</li>
+    <li><b>週5投稿（平日1本・週末休み）</b>、コンテンツ比率（Web/設計/インフラ35%・学習30%・AI25%・個人開発10%）</li>
+    <li><b>最大の成長エンジン＝平日15〜30分の「価値を足す返信」</b>（5〜20倍規模の同分野アカウントへ1日5〜8件）</li>
+    <li><b>KPI</b>：プロフィール訪問→フォロー転換率・保存数・返信数（月+50〜150、1,000人まで6〜12ヶ月の現実目標）</li>
+    <li>ハッシュタグ原則なし／リンクは最初の返信に／NGルール・de-identify徹底</li>
+  </ul>
+</div>
+
+<h2>2. 実行形態の Before / After</h2>
+<div class="card">
+<table>
+  <tr><th style="width:18%">項目</th><th style="width:41%">Before（方法A・〜7/5）</th><th style="width:41%">After（方法B'・7/5〜）</th></tr>
+  <tr>
+    <td><b>投稿の実行</b></td>
+    <td class="before">X純正スケジューラに<b>手動で1本ずつ予約</b>（日曜にクリック作業）</td>
+    <td class="after"><b>cron-job.org が毎日 9/12/15/18/20/22時 JST に post.yml を起動</b> → due な投稿を X API が自動投稿（±1〜2分）</td>
+  </tr>
+  <tr>
+    <td><b>日曜バッチ</b></td>
+    <td class="before">30〜45分：レビュー → スケジューラで4本予約 → 手動で分析実行 → リスト手入れ</td>
+    <td class="after"><b>20〜30分</b>：自動生成済みレポートを読む → レビューして <code>承認済み</code>＋<code>scheduled_at</code> を push → リスト手入れ</td>
+  </tr>
+  <tr>
+    <td><b>ステータス</b></td>
+    <td class="before">下書き → <code>予約済み</code> →（手動で）投稿済み</td>
+    <td class="after">下書き → <code>承認済み</code> →（<b>GHAが自動で</b>）<code>投稿済み</code>＋tweet_ids＋実投稿時刻</td>
+  </tr>
+  <tr>
+    <td><b>tweet_ids 書き戻し</b></td>
+    <td class="before">週1回の reconcile（タイムライン突合）頼み</td>
+    <td class="after"><b>投稿と同時に即・自動</b>。reconcile は手動投稿分の保険に降格</td>
+  </tr>
+  <tr>
+    <td><b>週次分析</b></td>
+    <td class="before"><code>/analyze-x-week</code> をローカルで手動実行</td>
+    <td class="after"><b>日曜11時に自動</b>：指標収集 → GHA内 Claude CLI がレポート生成・コミット（Max plan OAuth・API課金なし）</td>
+  </tr>
+  <tr>
+    <td><b>定時性</b></td>
+    <td class="before">X純正予約は秒単位で正確（GHA scheduleは実測+2.3〜5.6hズレのため不使用だった）</td>
+    <td class="after">cron-job.org → workflow_dispatch は<b>起動&lt;1秒</b>（news-paperで実証）。投稿は±1〜2分＝時間帯実験に十分</td>
+  </tr>
+  <tr>
+    <td><b>新リスク</b></td>
+    <td class="before">なし（その代わり毎週の手作業）</td>
+    <td class="after">cron-job.org に Fine-grained PAT を預託（このrepo限定・Actions権限のみに絞って緩和）</td>
+  </tr>
+</table>
+</div>
+
+<h2>3. 新アーキテクチャ（自動化パイプライン）</h2>
+<div class="card">
+  <b>毎日（投稿）</b>
+  <div class="flow">
+    <div class="node hl"><b>cron-job.org</b><small>毎日 9/12/15/18/20/22時 JST</small></div>
+    <div class="arrow">→</div>
+    <div class="node"><b>workflow_dispatch</b><small>post.yml 起動 &lt;1秒</small></div>
+    <div class="arrow">→</div>
+    <div class="node"><b>post_tweet.py</b><small>承認済み&amp;dueをX APIで投稿</small></div>
+    <div class="arrow">→</div>
+    <div class="node"><b>md書き戻し</b><small>投稿済み+tweet_ids+実時刻をpush</small></div>
+  </div>
+  <b>毎週日曜 11:00 JST（指標＋分析）</b>
+  <div class="flow">
+    <div class="node hl"><b>cron-job.org</b><small>日曜 11:00 JST</small></div>
+    <div class="arrow">→</div>
+    <div class="node"><b>fetch_metrics.py</b><small>指標収集＋手動投稿分のreconcile（保険）</small></div>
+    <div class="arrow">→</div>
+    <div class="node ai"><b>Claude CLI（GHA内）</b><small>analyze-x-week スキル実行</small></div>
+    <div class="arrow">→</div>
+    <div class="node"><b>週次レポート</b><small>analysis/YYYY-Www_report.md をコミット</small></div>
+  </div>
+  <div class="muted">→ 日曜昼の週次バッチ開始時には、先週の時間帯×曜日データと改善提案が揃っている状態。</div>
+</div>
+
+<h2>4. 今回追加した運用ルール（投稿の質）</h2>
+<div class="card">
+  <ul>
+    <li><span class="tag new">NEW</span><b>ライブネタ枠（週1）</b>：5枠のうち1枠は予約せず、当日「その週に実際あったこと」を手動投稿。会話が生まれやすく返信エンジンと相乗。ネタがなければ在庫でフォールバック</li>
+    <li><span class="tag new">NEW</span><b>スレッド枠（月1〜2本）</b>：5〜10ツイートの保存される型（手順・チェックリスト等）。在庫の近縁テーマを束ねて再構成</li>
+    <li><span class="tag new">NEW</span><b><code>analysis/reply_targets.md</code></b>：返信先リスト（アンカー11人＋5〜20倍規模の本命を随時追記）。平日の返信活動はこれを上から巡回</li>
+  </ul>
+</div>
+
+<h2>5. 残る手動作業（人がやること）</h2>
+<div class="card">
+  <div class="cols">
+    <div>
+      <b>毎週の運用</b>
+      <ul>
+        <li>日曜 20〜30分：レポート確認 → 4本レビュー承認 → push</li>
+        <li>平日 15〜30分：返信5〜8件＋引用RT1〜2件（最大の成長エンジン）</li>
+        <li>週1本：ライブネタを当日手動投稿</li>
+      </ul>
+    </div>
+    <div>
+      <b>初期セットアップ（一度だけ・未完）</b>
+      <ul>
+        <li><span class="tag todo">TODO</span>GitHub Fine-grained PAT 作成（twitter_post限定／Actions: RW）</li>
+        <li><span class="tag todo">TODO</span>cron-job.org に2ジョブ登録（投稿=毎日6回／週次=日曜11時）</li>
+        <li><span class="tag todo">TODO</span>GitHub Secrets に <code>CLAUDE_CODE_OAUTH_TOKEN</code> 追加</li>
+        <li><span class="tag todo">TODO</span>今回の変更を commit &amp; push</li>
+      </ul>
+      <div class="muted">手順詳細は analysis/x_strategy.md §4「外部スケジューラ設定」（news-paper README と同一パターン）</div>
+    </div>
+  </div>
+</div>
+
+<div class="muted" style="margin-top:24px">
+  関連ドキュメント: account.md（方針）／ analysis/x_strategy.md（運用詳細）／ analysis/reply_targets.md（返信先）／
+  .github/workflows/post.yml・metrics.yml（自動化本体）
+</div>
+
+</div>
+</body>
+</html>

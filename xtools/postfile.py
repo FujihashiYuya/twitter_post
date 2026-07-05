@@ -11,6 +11,7 @@ MAX_WEIGHTED_LEN = 280
 
 STATUS_DRAFT = "下書き"
 STATUS_APPROVED = "承認済み"
+STATUS_SCHEDULED = "予約済み"  # X純正スケジューラで予約済み。post.yml の自動投稿対象外
 STATUS_POSTED = "投稿済み"
 STATUS_REJECTED = "却下"
 

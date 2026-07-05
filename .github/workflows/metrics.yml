@@ -1,11 +1,20 @@
 name: fetch-metrics
 
-# 週次の指標収集: 投稿済みツイートの指標を取得し analysis/metrics_log.csv に追記。
-# 日曜 12:00 JST = 日曜 03:00 UTC。
-# 分析レポートの執筆は自動化しない（必要なときにローカルのClaude Codeで /analyze-x-week を実行）。
+# 週次パイプライン（日曜 11:00 JST 目標）:
+# 1) X純正スケジューラ等で手動投稿された分（status: 予約済み）の tweet_id をユーザータイムライン
+#    (GET /2/users/:id/tweets) から本文突合で特定し、post/*.md に 投稿済み+tweet_ids を書き戻す（保険）
+# 2) 投稿済みツイートの指標を取得し analysis/metrics_log.csv に追記
+# 3) Claude CLI が analyze-x-week スキルで週次分析レポートを生成しコミット
+#    → 日曜昼の週次バッチ時には読むだけの状態にする
+#
+# 定時起動は外部スケジューラ (cron-job.org) から workflow_dispatch を叩く（起動<1秒）。
+# GitHub の schedule は数時間遅延するため使わない（撤去済み）。
+# cron-job.org 側: 日曜 11:00 JST に
+#   POST https://api.github.com/repos/<owner>/twitter_post/actions/workflows/metrics.yml/dispatches
+#   Headers: Authorization: Bearer <fine-grained PAT (このrepo限定/Actions:RW)>
+#            Accept: application/vnd.github+json / X-GitHub-Api-Version: 2022-11-28
+#   Body: {"ref":"main"}
 on:
-  schedule:
-    - cron: "0 3 * * 0"
   workflow_dispatch: {}
 
 permissions:
@@ -19,6 +28,8 @@ jobs:
   fetch:
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    outputs:
+      has_data: ${{ steps.check.outputs.has_data }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -39,6 +50,15 @@ jobs:
           X_ACCESS_TOKEN: ${{ secrets.X_ACCESS_TOKEN }}
           X_ACCESS_TOKEN_SECRET: ${{ secrets.X_ACCESS_TOKEN_SECRET }}
         run: python -m xtools.fetch_metrics
+      - name: Check CSV has data rows
+        id: check
+        run: |
+          if [ -f analysis/metrics_log.csv ] && [ "$(wc -l < analysis/metrics_log.csv)" -gt 1 ]; then
+            echo "has_data=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_data=false" >> "$GITHUB_OUTPUT"
+            echo "No metrics rows yet; analyze job will be skipped."
+          fi
       - name: Commit & push metrics
         run: |
           git add -A
@@ -46,6 +66,54 @@ jobs:
             echo "No metrics changes (no posted tweets yet)."
             exit 0
           fi
-          git commit -m "chore(x): weekly metrics snapshot"
+          git commit -m "chore(x): weekly metrics snapshot (+reconcile scheduled posts)"
+          git pull --rebase origin main
+          git push
+
+  # ── 週次分析（Claude CLI・Maxプラン OAuth トークン・API課金なし） ──────────
+  # モデルには Read/Write/Glob/Grep のみ付与（Bash/Web なし）。commit は後続ステップが行う。
+  analyze:
+    needs: fetch
+    if: needs.fetch.outputs.has_data == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main   # fetch ジョブが push した最新の CSV を含む
+      - name: Compute JST date & ISO week
+        id: d
+        run: |
+          echo "date=$(TZ=Asia/Tokyo date +%F)" >> "$GITHUB_OUTPUT"
+          echo "week=$(TZ=Asia/Tokyo date +%G-W%V)" >> "$GITHUB_OUTPUT"
+      - name: Install Claude Code CLI (pinned)
+        run: |
+          curl -fsSL https://claude.ai/install.sh | bash -s 2.1.185
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+      - name: Generate weekly report (model reads CSV & writes report only)
+        env:
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+        run: |
+          DATE="${{ steps.d.outputs.date }}"
+          WEEK="${{ steps.d.outputs.week }}"
+          claude -p "リポジトリの .claude/skills/analyze-x-week/SKILL.md を読み、その手順に厳密に従って週次分析レポートを生成してください。今日の日付(JST)は ${DATE}、ISO週は ${WEEK} です。レポートは analysis/${WEEK}_report.md に書き出してください。git 操作はしないでください（後続ステップが行います）。秘密情報には触れないでください。" \
+            --allowedTools "Read,Write,Glob,Grep" \
+            --permission-mode acceptEdits \
+            --max-turns 30
+      - name: Verify report (fail-closed)
+        run: |
+          WEEK="${{ steps.d.outputs.week }}"
+          R="analysis/${WEEK}_report.md"
+          test -s "$R" || { echo "::error::missing/empty $R"; exit 1; }
+          echo "verify OK: $R"
+      - name: Commit & push report
+        run: |
+          git config user.name "x-automation-bot"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add analysis/
+          if git diff --cached --quiet; then echo "nothing to commit"; exit 0; fi
+          git commit -m "docs(x): weekly analysis report ${{ steps.d.outputs.week }}"
           git pull --rebase origin main
           git push

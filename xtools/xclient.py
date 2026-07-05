@@ -36,6 +36,33 @@ class XClient:
             reply_to = tid
         return ids
 
+    def get_me(self) -> str:
+        resp = self.session.get(f"{self.base}/users/me", timeout=30)
+        if resp.status_code != 200:
+            raise XAPIError(resp.status_code, resp.text)
+        try:
+            return resp.json()["data"]["id"]
+        except (KeyError, ValueError) as exc:
+            raise XAPIError(resp.status_code, f"Unexpected response body: {resp.text}") from exc
+
+    def get_user_tweets(self, user_id: str, max_pages: int = 2) -> list[dict]:
+        fields = "created_at,in_reply_to_user_id"
+        tweets: list[dict] = []
+        token = None
+        for _ in range(max_pages):
+            params = {"max_results": 100, "tweet.fields": fields, "exclude": "retweets"}
+            if token:
+                params["pagination_token"] = token
+            resp = self.session.get(f"{self.base}/users/{user_id}/tweets", params=params, timeout=30)
+            if resp.status_code != 200:
+                raise XAPIError(resp.status_code, resp.text)
+            body = resp.json()
+            tweets.extend(body.get("data", []))
+            token = body.get("meta", {}).get("next_token")
+            if not token:
+                break
+        return tweets
+
     def get_metrics(self, tweet_ids: list[str]) -> dict:
         fields = "public_metrics,non_public_metrics,created_at"  # non_public_metrics requires user-context OAuth 1.0a + tweet ownership
         results: dict = {}

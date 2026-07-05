@@ -60,11 +60,11 @@ tweet_ids: []               # 自動投稿後に自動記入
 - 投稿は Claude routine が自動実行し、完了後に `status: 投稿済み` ＋ `tweet_ids` を自動記入
 - 却下した案も記録として残す（`status: 却下`）
 
-### 投稿自動化（概要）— GitHub Actions で実行
+### 投稿自動化（概要）— cron-job.org → GitHub Actions で実行
 - 作成: `/create-x-post` スキルで下書き生成 → レビューし `status: 承認済み`＋`scheduled_at` を設定して push（週まとめて事前承認）
-- 投稿: **GitHub Actions `post.yml`**（毎日 9/12/15/18/20/22時 JST = UTC 0,3,6,9,11,13）が `xtools/post_tweet.py` を実行し、投稿＋`status: 投稿済み`書き戻し
-- 指標収集: **GitHub Actions `metrics.yml`**（日曜12時 JST）が `xtools/fetch_metrics.py` で `analysis/metrics_log.csv` に追記
-- 週次分析: 必要なときに **`/analyze-x-week` スキル**でローカル生成（Max plan内・追加課金なし）
+- 投稿: **cron-job.org**（毎日 9/12/15/18/20/22時 JST・分単位で正確）が **`post.yml`** を `workflow_dispatch` で起動し、`xtools/post_tweet.py` が投稿＋`status: 投稿済み`書き戻し（GitHubの`schedule:`は数時間遅延するため不使用）
+- 指標収集＋週次分析: **cron-job.org**（日曜11時 JST）が **`metrics.yml`** を起動 → `xtools/fetch_metrics.py` が `analysis/metrics_log.csv` に追記（手動投稿分＝`status: 予約済み`はタイムライン突合で書き戻し）→ **GHA内のClaude CLI**が `/analyze-x-week` スキルで `analysis/<YYYY>-W<WW>_report.md` を自動生成（Max plan OAuth・API課金なし）
+- `/analyze-x-week` はローカルでも手動実行可能
 - 認証: X の4キーは GitHub の暗号化 Secrets に登録（`.env` はローカル検証用・gitignore）
 - 詳細: `docs/superpowers/specs/2026-06-17-x-post-automation-design.md`
 
