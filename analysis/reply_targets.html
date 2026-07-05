@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>返信ターゲットリスト</title>
+<style>
+  :root {
+    --bg: #f6f8fa; --card: #ffffff; --ink: #1f2328; --sub: #57606a;
+    --accent: #0969da; --border: #d0d7de;
+  }
+  * { box-sizing: border-box; }
+  body { font-family: "Hiragino Sans", "Yu Gothic UI", "Meiryo", sans-serif;
+         background: var(--bg); color: var(--ink); margin: 0; padding: 32px 16px; line-height: 1.75; }
+  .wrap { max-width: 900px; margin: 0 auto; background: var(--card);
+          border: 1px solid var(--border); border-radius: 10px; padding: 32px 40px; }
+  h1 { font-size: 25px; border-bottom: 2px solid var(--accent); padding-bottom: 8px; }
+  h2 { font-size: 19px; border-left: 5px solid var(--accent); padding-left: 10px; margin-top: 36px; }
+  h3 { font-size: 16px; margin-top: 26px; color: var(--accent); }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; margin: 12px 0; }
+  th, td { border: 1px solid var(--border); padding: 8px 12px; text-align: left; vertical-align: top; }
+  th { background: #eef2f6; font-weight: 600; }
+  tr:nth-child(even) td { background: #fafbfc; }
+  code { background: #eef2f6; border-radius: 4px; padding: 1px 6px; font-size: 13px;
+         font-family: Consolas, monospace; }
+  pre { background: #eef2f6; border-radius: 8px; padding: 12px 16px; overflow-x: auto; }
+  pre code { background: none; padding: 0; }
+  blockquote { border-left: 4px solid var(--accent); margin: 12px 0; padding: 4px 16px;
+               background: #f0f7ff; color: var(--ink); border-radius: 0 8px 8px 0; }
+  hr { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
+  a { color: var(--accent); }
+  .src { color: var(--sub); font-size: 12px; margin-top: 32px; border-top: 1px solid var(--border);
+         padding-top: 10px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>返信ターゲットリスト</h1>
+<p><code>x_strategy.md</code> 5章「立ち回りプレイブック」の実行用リスト。
+<strong>成長の約半分は返信から</strong>。平日15〜30分の返信活動はこのリストを上から見て行う。
+作成: 2026-07-05（Web調査ベース。フォロワー数は変動するため、フォロー時にアプリ内で要確認）</p>
+<hr />
+<h2>使い方（毎日）</h2>
+<ol>
+<li>下の「B. 返信ターゲット（本命）」を上から見て、当日投稿があった人に<strong>価値を足す返信</strong>を5〜8件</li>
+<li>「A. アンカー」は情報源＋引用RTのネタ元。返信先としては大きすぎて埋もれるので基本は狙わない</li>
+<li>良い返信をくれた人・リプ欄で見つけた同規模の人は、随時Bに追記（週次バッチで手入れ）</li>
+</ol>
+<p><strong>価値を足す返信</strong> = データ・自分の実体験・丁寧な問い・節度ある別視点。「すごい！」「参考になります」だけはNG。</p>
+<hr />
+<h2>A. アンカーアカウント（情報源・型の参考・ターゲット発掘の母集団）</h2>
+<p>規模が大きいので返信獲得は狙わない。役割は3つ:
+①タイムラインの質を上げる情報源 ②投稿の「型」の教材 ③<strong>リプ欄から5〜20倍規模の本命を発掘する場</strong></p>
+<h3>目標像（実名×実務×誠実な発信で信頼を築いたモデル）</h3>
+<table>
+<thead>
+<tr>
+<th>@ID</th>
+<th>誰</th>
+<th>分野</th>
+<th>学ぶこと</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>@jnchito</td>
+<td>伊藤淳一（ソニックガーデン）</td>
+<td>Ruby/Rails</td>
+<td>教育的・誠実な発信→信頼→仕事の王道モデル。Rails系で技術も近い</td>
+</tr>
+<tr>
+<td>@minorun365</td>
+<td>みのるん（KDDIアジャイル開発センター）</td>
+<td>AWS×生成AI</td>
+<td>学習ログ・ハンズオン共有で急成長した現行最良モデル（約1.4万）</td>
+</tr>
+<tr>
+<td>@uhyo_</td>
+<td>uhyo（カオナビ）</td>
+<td>TypeScript/React</td>
+<td>専門性一点突破。Vue→React移行の「先の姿」</td>
+</tr>
+</tbody>
+</table>
+<h3>個人開発・build in public（将来のアプリ/note認知導線の参考）</h3>
+<table>
+<thead>
+<tr>
+<th>@ID</th>
+<th>誰</th>
+<th>分野</th>
+<th>学ぶこと</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>@catnose99</td>
+<td>catnose（Zenn/しずかなインターネット）</td>
+<td>個人開発</td>
+<td>プロダクトで語る型（※匿名モデルなので信頼構築は別型）</td>
+</tr>
+<tr>
+<td>@craftzdog</td>
+<td>TAKUYA（Inkdrop）</td>
+<td>個人開発</td>
+<td>日英バイリンガル発信、bio英語1行の海外導線</td>
+</tr>
+<tr>
+<td>@iritec</td>
+<td>入江慎吾（MENTA創業）</td>
+<td>個人開発</td>
+<td>発信→プロダクト→収益の導線設計</td>
+</tr>
+</tbody>
+</table>
+<h3>AI実装（差別化軸の情報源）</h3>
+<table>
+<thead>
+<tr>
+<th>@ID</th>
+<th>誰</th>
+<th>分野</th>
+<th>学ぶこと</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>@schroneko</td>
+<td>ぬこぬこ</td>
+<td>AI情報</td>
+<td>一次情報を140字以内で速報する型。氏の「追っているAIアカウントまとめ」(Zenn)も発掘に使える</td>
+</tr>
+<tr>
+<td>@karaage0703</td>
+<td>からあげ</td>
+<td>AI/趣味開発</td>
+<td>会社員×趣味開発×継続発信のバランス</td>
+</tr>
+<tr>
+<td>@npaka123</td>
+<td>npaka</td>
+<td>生成AI</td>
+<td>「Xは入口・本文はnote」の配信レイヤー戦略</td>
+</tr>
+</tbody>
+</table>
+<h3>投稿の「型」（保存される投稿づくり）</h3>
+<table>
+<thead>
+<tr>
+<th>@ID</th>
+<th>誰</th>
+<th>分野</th>
+<th>学ぶこと</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>@tonkotsuboy_com</td>
+<td>鹿野壮（Ubie）</td>
+<td>フロントエンド</td>
+<td>図解×小ネタの保存される型</td>
+</tr>
+<tr>
+<td>@tak_dcxi</td>
+<td>TAK</td>
+<td>CSS/マークアップ</td>
+<td>実務Tips型</td>
+</tr>
+<tr>
+<td>@ockeghem</td>
+<td>徳丸浩</td>
+<td>セキュリティ</td>
+<td>セキュリティ学習ネタの一次情報源</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>B. 返信ターゲット（本命・5〜20倍規模）</h2>
+<p><strong>基準</strong>: 自分の5〜20倍のフォロワー規模／Web・AI・個人開発の発信／実名 or 実名相当の信頼感／
+返信にちゃんと反応する人（リプ欄が会話になっているか確認）。数万規模は埋もれるので外す。</p>
+<p><strong>発掘方法</strong>:
+1. Aのアカウントの<strong>リプ欄で価値ある返信をしている人</strong>を見る（同じ戦略の実行者＝会話が育ちやすい）
+2. <strong>Zennトレンド記事の著者</strong>のXアカウント（発信意欲があり規模が近い人が多い）
+3. <code>#個人開発</code> で定期的に進捗を出している500〜3,000規模の人
+4. 自分の投稿に反応をくれた人のフォロー元</p>
+<p>目標20〜30人。見つけ次第ここに追記し、合わなければ消す（理由もメモ）。</p>
+<table>
+<thead>
+<tr>
+<th>@ID</th>
+<th>誰/一言メモ</th>
+<th>規模(確認日)</th>
+<th>分野</th>
+<th>返信で足せる自分の価値</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>（例）@xxxx</td>
+<td>Zenn記事がきっかけ。リプ欄が会話になっている</td>
+<td>1,200 (7/5)</td>
+<td>React</td>
+<td>Vue→React移行の実体験</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>運用メモ</h2>
+<ul>
+<li>週次バッチ（日曜）でこのリストを手入れ: 反応のない人を入れ替え、リプ欄発掘分を追加</li>
+<li>Xの「リスト」機能に同じメンバーで非公開リストを作ると毎日の巡回が速い</li>
+<li>フォローは1日5〜10人まで（乱発はシャドウバン要因）</li>
+</ul>
+<div class="src">source: analysis/reply_targets.md（このHTMLは派生物。更新は md 側で行い <code>python tools/md2html.py</code> で再生成）</div>
+</div>
+</body>
+</html>

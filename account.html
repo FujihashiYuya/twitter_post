@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Xアカウント運用方針 & 投稿内容まとめ</title>
+<style>
+  :root {
+    --bg: #f6f8fa; --card: #ffffff; --ink: #1f2328; --sub: #57606a;
+    --accent: #0969da; --border: #d0d7de;
+  }
+  * { box-sizing: border-box; }
+  body { font-family: "Hiragino Sans", "Yu Gothic UI", "Meiryo", sans-serif;
+         background: var(--bg); color: var(--ink); margin: 0; padding: 32px 16px; line-height: 1.75; }
+  .wrap { max-width: 900px; margin: 0 auto; background: var(--card);
+          border: 1px solid var(--border); border-radius: 10px; padding: 32px 40px; }
+  h1 { font-size: 25px; border-bottom: 2px solid var(--accent); padding-bottom: 8px; }
+  h2 { font-size: 19px; border-left: 5px solid var(--accent); padding-left: 10px; margin-top: 36px; }
+  h3 { font-size: 16px; margin-top: 26px; color: var(--accent); }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; margin: 12px 0; }
+  th, td { border: 1px solid var(--border); padding: 8px 12px; text-align: left; vertical-align: top; }
+  th { background: #eef2f6; font-weight: 600; }
+  tr:nth-child(even) td { background: #fafbfc; }
+  code { background: #eef2f6; border-radius: 4px; padding: 1px 6px; font-size: 13px;
+         font-family: Consolas, monospace; }
+  pre { background: #eef2f6; border-radius: 8px; padding: 12px 16px; overflow-x: auto; }
+  pre code { background: none; padding: 0; }
+  blockquote { border-left: 4px solid var(--accent); margin: 12px 0; padding: 4px 16px;
+               background: #f0f7ff; color: var(--ink); border-radius: 0 8px 8px 0; }
+  hr { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
+  a { color: var(--accent); }
+  .src { color: var(--sub); font-size: 12px; margin-top: 32px; border-top: 1px solid var(--border);
+         padding-top: 10px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>Xアカウント運用方針 &amp; 投稿内容まとめ</h1>
+<hr />
+<h2>アカウント全体の目的</h2>
+<ul>
+<li>エンジニアとしての実務経験・個人開発・学習の記録を発信することで
+  <strong>「技術的な思考力と実行力を備えた開発者」</strong>としての信頼を築く。</li>
+<li>他人への有益性だけでなく、自分の思考整理・ログとしても活用。</li>
+<li>AIやツール活用、設計・要件定義などの<strong>上流思考も含めた技術視点</strong>を発信軸に据える。</li>
+<li>個人開発アプリやnoteなどストック収益を目指した製品を作った際に認知として使いたい</li>
+</ul>
+<hr />
+<h2>ターゲット読者</h2>
+<table>
+<thead>
+<tr>
+<th>区分</th>
+<th>対象</th>
+<th>説明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>プライマリ</td>
+<td>実務1-5年目のWebエンジニア</td>
+<td>同じ目線で共感・参考になる層（フォロワーの母数）</td>
+</tr>
+<tr>
+<td>セカンダリ</td>
+<td>個人開発に興味がある人</td>
+<td>開発過程・思考を知りたい層</td>
+</tr>
+<tr>
+<td>成果につなぐ層</td>
+<td>エンジニアに発注する側（創業者・テックリード・PM）</td>
+<td>副業/案件のインバウンド源。実力証明コンテンツで届かせる</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>バランス方針</strong>: 仲間への共感・学びログで母数を作りつつ、「課題をどう解決したか」「設計判断の理由」など発注者に響く実力証明を意図的に織り交ぜる。仲間だけを集めても仕事の発注にはつながらないため。</p>
+</blockquote>
+<hr />
+<h2>投稿スケジュール</h2>
+<h3>投稿頻度・運用フロー（確定）</h3>
+<ul>
+<li><strong>週5投稿（平日1本ずつ・週末休み）</strong>。本数より「途切れない継続性」を最優先</li>
+<li><strong>日曜にまとめて翌週分（4本）を承認</strong>：<code>post/</code> の在庫を番号順にレビュー → <code>status: 承認済み</code>＋<code>scheduled_at</code>（曜日・時刻をばらす＝時間帯の実験）を設定して <strong>push</strong>。投稿は cron-job.org → GitHub Actions <code>post.yml</code> が定時（±1〜2分）に自動実行。承認＝最終チェック</li>
+<li><strong>週5枠のうち1枠はライブネタ枠</strong>：予約せず残し、当日「その週に実際あったこと」を手動投稿（会話が生まれやすく、返信エンジンと相乗）。ネタがなければ在庫でフォールバック</li>
+<li><strong>月1〜2本はスレッド型（5〜10ツイート）</strong>：手順・チェックリスト等の「保存される型」。単発140字だけでは保存・プロフィール訪問が伸びない</li>
+<li>平日は投稿せず、<strong>1日15〜30分を返信・引用RT等の能動的な立ち回り</strong>に充てる（下記エンゲージメント方針＝最大の成長エンジン）。返信先は <code>analysis/reply_targets.md</code> を参照</li>
+<li>詳細な運用手順は <code>analysis/x_strategy.md</code> を参照</li>
+</ul>
+<h3>投稿候補時間帯（実験中）</h3>
+<p>反応の良い時間帯を統計的に探るため、以下の候補時刻(JST)を曜日・時刻でばらして投稿し、週次レポート（GitHub Actionsが日曜に自動生成）で時間帯×曜日別に検証する。
+| 候補時刻(JST) | 想定読者 |
+|--------|------|
+| 9:00 | 始業前・通勤後 |
+| 12:00 | 昼休み |
+| 15:00 | 午後の小休止 |
+| 18:00 | 退勤・移動中 |
+| 20:00 / 22:00 | 帰宅後のリラックスタイム |</p>
+<h3>週間スケジュール例</h3>
+<pre><code>月: 投稿
+火: エンゲージメント活動（いいね・リプライ）
+水: 投稿
+木: 引用RT + いいね
+金: 投稿
+土日: 軽くいいねのみ or 休み
+</code></pre>
+<hr />
+<h2>コンテンツ比率</h2>
+<p>週3-4投稿の場合の目安：</p>
+<table>
+<thead>
+<tr>
+<th>ジャンル</th>
+<th>比率</th>
+<th>週あたり</th>
+<th>内容例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>技術ログ</td>
+<td>40%</td>
+<td>1-2回</td>
+<td>フレームワーク、バージョンアップ、実装Tips</td>
+</tr>
+<tr>
+<td>学習習慣</td>
+<td>30%</td>
+<td>1回</td>
+<td>Udemy、書籍、セキュリティ学習</td>
+</tr>
+<tr>
+<td>ツール活用</td>
+<td>20%</td>
+<td>1回</td>
+<td>AI、効率化ツール、開発環境</td>
+</tr>
+<tr>
+<td>個人開発</td>
+<td>10%</td>
+<td>隔週1回</td>
+<td>進捗、設計、気づき</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>投稿の基本構成</h2>
+<ul>
+<li><strong>実体験ベースでの技術的気づき</strong></li>
+<li><strong>行動（学習・開発）の報告やログ</strong></li>
+<li><strong>実務・個人開発・副業のバランス感覚の共有</strong></li>
+<li><strong>AIやツールの使い方＋そこから得られる効率化の示唆</strong></li>
+<li><strong>情報整理や設計に関する本質的な視点</strong></li>
+</ul>
+<hr />
+<h2>投稿ジャンルの分類と内容例</h2>
+<h3>1. 技術ログ・フレームワーク活用</h3>
+<ul>
+<li>Railsのマイナーバージョンアップ（7.1.4→7.2.3）のスレッド投稿</li>
+<li>変更点・注意点・アップグレード手順を明快に整理</li>
+<li>
+<p>実務ベースの共有により信頼性が高い</p>
+</li>
+<li>
+<p>FastAPIの導入感想と学び</p>
+</li>
+<li>「他のWebフレームワーク経験者ならスムーズ」という共感重視の書き方</li>
+</ul>
+<hr />
+<h3>2. 学習習慣・インプットログ</h3>
+<ul>
+<li>セキュリティ学習スタート（Udemy活用）</li>
+<li>AIトレンドを意識しつつ、基礎スキルを重視する姿勢を明示</li>
+<li>
+<p>通勤・家事の合間に聞き流しでインプットしている工夫を紹介</p>
+</li>
+<li>
+<p>データの整備とAI精度の関係性に言及</p>
+</li>
+<li>「情報のデータ化とフォーマット化が第一ステップ」と本質的な視点を共有</li>
+</ul>
+<hr />
+<h3>3. 個人開発・副業とのバランス</h3>
+<ul>
+<li>個人開発に取り組みたかったが、副業案件が来たという悩みの共有</li>
+<li>本業・副業・個人開発のバランスに葛藤があるという正直な気持ちを発信</li>
+</ul>
+<hr />
+<h3>4. ツール活用と実務効率化</h3>
+<ul>
+<li>ショートカット一覧シールの紹介（Mac用）</li>
+<li>
+<p>実際に使って便利だった体験ベースの紹介＋初心者へのおすすめ</p>
+</li>
+<li>
+<p>Markdownファイル＋Notion＋AIによるドキュメント管理</p>
+</li>
+<li>クラウドコードとの相性、VS CodeよりNotionの方が見栄え良いなどの実用的ポイント</li>
+</ul>
+<hr />
+<h2>投稿トーンと文体方針</h2>
+<ul>
+<li>誠実・実直な文体を維持（軽すぎず、堅すぎない）</li>
+<li>自分の学びや気づきを「共有する」姿勢</li>
+<li>押しつけない提案型の語り口（共感・保存を得やすい）</li>
+<li>原則ハッシュタグなし（使う場合も最大2つ、目的が明確なときのみ）</li>
+</ul>
+<hr />
+<h2>エンゲージメント方針（最大の成長エンジン）</h2>
+<p>小規模アカウントの成長の約半分は「自分の投稿」ではなく「<strong>自分より少し大きい同分野アカウントへの質の高い返信</strong>」から生まれる。Xの仕様上、見知らぬ人に届くには第三者のエンゲージメントが必要で、返信がその橋渡しになる（公式開示でも最重み行動は「返信→著者が返信し返す」往復）。</p>
+<h3>能動的な返信（最優先）</h3>
+<ul>
+<li><strong>対象</strong>: 自分の5〜20倍規模の、同分野(Web/AI/個人開発)アカウント</li>
+<li><strong>量</strong>: 1日5〜10件。可能なら投稿直後（早いほど露出枠を取れる）に、上位返信を狙う</li>
+<li><strong>質</strong>: 「いいね同然の一言」ではなく、データ・自分の経験・丁寧な問い・節度ある異論など<strong>価値を足す</strong>返信（著者が返信し返したくなる水準）</li>
+<li><strong>自分の投稿は最初の30分が勝負</strong>: 来た返信には全部返し、会話を伸ばす</li>
+</ul>
+<h3>リプライ（自分への返信）</h3>
+<table>
+<thead>
+<tr>
+<th>対象</th>
+<th>ルール</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>自分への返信</td>
+<td>24時間以内に必ず返す（特に投稿後30分は最優先）</td>
+</tr>
+<tr>
+<td>他者への返信</td>
+<td>価値を追加できるときだけ（無理に絡まない）</td>
+</tr>
+</tbody>
+</table>
+<p><strong>良いリプライ例</strong>:
+- 「同じ経験あります！私の場合は〇〇で解決しました」
+- 「参考になります。△△の部分、もう少し詳しく知りたいです」</p>
+<h3>引用RT（引用リポスト）</h3>
+<ul>
+<li>自分の経験・意見を必ず添える／元ツイートの価値を高める</li>
+<li>週1-2回程度（多すぎると自分の発信が埋もれる）</li>
+</ul>
+<h3>いいね</h3>
+<ul>
+<li>参考になった投稿に積極的に（同ジャンル中心、1日10-20程度）。ただし<strong>成長への寄与は返信＞＞いいね</strong></li>
+</ul>
+<blockquote>
+<p>NG（信頼を損なう/効かない）: エンゲージメント・プール、相互フォロー、「いいねしたら〜」系の煽り、中身のない「すごい！」返信。Xに低評価され、目指す信頼性とも逆行する。</p>
+</blockquote>
+<h3>フォローすべきアカウント</h3>
+<ul>
+<li>同レベル〜少し上のエンジニア</li>
+<li>使っている技術の公式アカウント</li>
+<li>個人開発者</li>
+</ul>
+<hr />
+<h2>NGルール（禁止事項）</h2>
+<h3>絶対NG</h3>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>理由</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>会社名・プロジェクト名</td>
+<td>守秘義務違反リスク</td>
+</tr>
+<tr>
+<td>クライアント情報</td>
+<td>特定につながる</td>
+</tr>
+<tr>
+<td>年収・待遇の具体的数字</td>
+<td>炎上・マウントと受け取られる</td>
+</tr>
+<tr>
+<td>転職・退職の詳細</td>
+<td>トラブルの元</td>
+</tr>
+<tr>
+<td>他エンジニア/技術への批判</td>
+<td>炎上リスク</td>
+</tr>
+<tr>
+<td>政治・宗教的発言</td>
+<td>本筋から外れる</td>
+</tr>
+</tbody>
+</table>
+<h3>避けるべき表現</h3>
+<table>
+<thead>
+<tr>
+<th>NG表現</th>
+<th>代替表現</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>「〜すべき」「〜しないとダメ」</td>
+<td>「〜と感じた」「〜が良かった」</td>
+</tr>
+<tr>
+<td>「普通は〜」「当然〜」</td>
+<td>「私の場合は〜」</td>
+</tr>
+<tr>
+<td>断定的な主張</td>
+<td>「〜かもしれない」「〜という印象」</td>
+</tr>
+<tr>
+<td>マウント系</td>
+<td>共感・提案型に言い換え</td>
+</tr>
+</tbody>
+</table>
+<h3>避けるべき話題</h3>
+<ul>
+<li>炎上中の話題への言及</li>
+<li>特定企業・サービスへの批判</li>
+<li>給与・待遇の比較</li>
+</ul>
+<h3>避けるべきハッシュタグ（信頼性のため）</h3>
+<ul>
+<li><strong>#駆け出しエンジニア / #エンジニアと繋がりたい は使わない</strong>：情報商材・キラキラ系・bot likesと結びつき、採用側・発注側からの信頼を損なうのがJP界隈の総意（いいねも信用シグナルにならない）。</li>
+<li>使うなら #個人開発 等の健全なものを最大1つ。原則ハッシュタグなしの方針と整合。</li>
+</ul>
+<hr />
+<h2>今後の拡張方針（戦略）</h2>
+<h3>発信の型（learning / building in public）</h3>
+<ul>
+<li>個人開発の構想・画面設計・進捗ログを小さく共有（<strong>成功だけでなく失敗・判断理由も</strong>。失敗談はむしろ伸びる）</li>
+<li>学習内容を「1トピック1投稿」でシリーズ化</li>
+<li>AI・自動化ツールの活用例を具体的に（実務発の知見）</li>
+<li>設計・要件定義など上流工程の思考ログ（発注者に効く実力証明）</li>
+</ul>
+<h3>副業・個人開発への導線（変換装置）</h3>
+<ul>
+<li>フォロワーは「借り物」。<strong>フォロワー → メールリスト → 機会</strong>の導線を作る</li>
+<li><strong>リードマグネット</strong>（実務発のチートシート/スターターrepo/チェックリスト等、無料でも"お金を払う価値"のあるもの）で見込み客を獲得</li>
+<li>bio＋固定ツイートを「対(つい)」で運用：bioで"何をする人・誰を助けるか"を約束、固定ツイートで実績を証明。bilingual(日本語＋英語1行)で低コストに海外導線も</li>
+<li>DMは関係構築の後（数週間の有用な返信→個別相談）。コールド営業はしない</li>
+</ul>
+<h3>配信レイヤーとしての活用</h3>
+<ul>
+<li>技術記事はZenn/Qiita、想いはnoteに書き、<strong>Xはそれらへの入口</strong>として使う</li>
+<li>本文には要点・図を置き、<strong>リンクは「最初の返信」に置く</strong>（=<code>thread: true</code>の2ツイート目。本文リンクはリーチ激減＋API$0.20のため）</li>
+</ul>
+<hr />
+<h2>成長指標（目標）</h2>
+<p>現実的なベンチマーク: 無課金・通常運用で<strong>月+50〜150フォロワー</strong>、<strong>1,000人まで約6〜12ヶ月</strong>（「月+500」等は誇大広告。焦らない）。</p>
+<table>
+<thead>
+<tr>
+<th>期間</th>
+<th>現実的な目安</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>3ヶ月後</td>
+<td>フォロワー +150〜300（投稿習慣と返信の定着が主目的）</td>
+</tr>
+<tr>
+<td>6ヶ月後</td>
+<td>フォロワー 500前後、平均インプレッションが右肩上がり</td>
+</tr>
+<tr>
+<td>1年後</td>
+<td>フォロワー 1,000前後、固定ファン・最初の副業/個人開発の反応</td>
+</tr>
+</tbody>
+</table>
+<h3>主要KPI（フォロワー数だけを追わない）</h3>
+<ul>
+<li><strong>プロフィール訪問 → フォロー転換率</strong>（成長の先行指標。訪問は増えるのにフォローが伸びない＝bio/固定ツイートを直す合図）</li>
+<li>1投稿あたりのエンゲージメント率・<strong>保存数</strong>（いいねは虚栄指標寄り）</li>
+<li><strong>返信数</strong>（成長エンジンの実行量）</li>
+<li>※ <strong>X Premium は契約済み（認証バッジあり）</strong>。リーチに効く課金レバー(実測約10倍)と純正の予約投稿機能を確保済み。アカウント全体の詳細分析もPremiumで閲覧可。</li>
+</ul>
+<h3>定期振り返り</h3>
+<ul>
+<li>週1回（日曜11時 JST）：GitHub Actions が指標収集→週次分析レポート生成まで自動実行（<code>analysis/&lt;YYYY&gt;-W&lt;WW&gt;_report.md</code>）。日曜昼の週次バッチでは読むだけ</li>
+<li>月1回：投稿数・エンゲージメント率の推移と、伸びた投稿の傾向を確認して方針を微調整</li>
+</ul>
+<hr />
+<h2>このアカウントのコアメッセージ</h2>
+<blockquote>
+<p>「技術を理解し、考え、形にし続けるエンジニアの記録」
+実務・副業・個人開発・学習を通して積み上げる、成長と思考のログ。</p>
+</blockquote>
+<hr />
+<h2>アカウント情報</h2>
+<p><strong>URL</strong>: https://x.com/FujihashiYuya</p>
+<p><strong>発信の軸</strong>: Webエンジニア（ときどきAI実装）。AIは看板にせず、Web/設計/インフラの実装知見を主軸に、差別化として残す（在庫がWeb中心であることと一致・誠実重視）。第一目的はフォロワー基盤づくり。</p>
+<p><strong>表示名</strong>: <code>Fujihashi Yuya｜Webエンジニア</code></p>
+<p><strong>自己紹介（bio・確定）</strong>:
+実務×個人開発のWebエンジニア｜設計・フロント・AWSインフラ、ときどきAI実装｜学びと「なぜそう作ったか」を毎日メモ｜Vue/Rails→React</p>
+<hr />
+<h2>過去の投稿（参考）</h2>
+<h3>固定ツイート（2025年12月13日）</h3>
+<pre><code>・日々の気づきや疑問のメモ
+・プロダクト開発の途中経過
+・要件定義／設計／技術選定で考えたこと
+・エンジニアキャリアについて
+・「なぜ作るか」「なぜそう判断したか」
+
+完成した話より、考えている過程を記録します。
+</code></pre>
+<h3>技術ログ系</h3>
+<pre><code>Rails 7.1.4 → 7.2.3 に無事アップグレード完了
+テストはオールグリーン ✅
+破壊的変更も調査済みで、私のプロジェクトでは問題ありませんでした。
+これからアップグレードする方向けに、変更点と手順をスレッドにまとめます👇
+#Rails
+</code></pre>
+<h3>学習習慣系</h3>
+<pre><code>最近、セキュリティ系の学習を始めました。
+Udemyの講座を買って、通勤中や家事の合間に聞き流しでキャッチアップ中です。
+AIエージェントの開発が注目されていますが、設計や要件定義にもセキュリティの視点は欠かせないと感じています。
+今後はその学びも投稿していきます。
+</code></pre>
+<h3>ツール活用系</h3>
+<pre><code>クラウドインフラやAPIの英語ドキュメントは、
+① Perplexity Cometでページ全体をAI要約
+② Raycastで必要な範囲を選択してAI要約
+③ Google翻訳で原文確認
+の3つを併用して読んでいます。
+翻訳＋要約があると、英語→日本語の解読が一気に楽になるのでお勧めです。
+</code></pre>
+<h3>個人開発系</h3>
+<pre><code>個人でアプリを作るときは、他人のニーズを探すより「自分の課題を解決すること」から始めるのが一番しっくりくる。
+そう気づいて、今日から日々の気づきも記録していくことにしました。
+</code></pre>
+<div class="src">source: account.md（このHTMLは派生物。更新は md 側で行い <code>python tools/md2html.py</code> で再生成）</div>
+</div>
+</body>
+</html>

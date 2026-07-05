@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>X運用戦略（確定版）</title>
+<style>
+  :root {
+    --bg: #f6f8fa; --card: #ffffff; --ink: #1f2328; --sub: #57606a;
+    --accent: #0969da; --border: #d0d7de;
+  }
+  * { box-sizing: border-box; }
+  body { font-family: "Hiragino Sans", "Yu Gothic UI", "Meiryo", sans-serif;
+         background: var(--bg); color: var(--ink); margin: 0; padding: 32px 16px; line-height: 1.75; }
+  .wrap { max-width: 900px; margin: 0 auto; background: var(--card);
+          border: 1px solid var(--border); border-radius: 10px; padding: 32px 40px; }
+  h1 { font-size: 25px; border-bottom: 2px solid var(--accent); padding-bottom: 8px; }
+  h2 { font-size: 19px; border-left: 5px solid var(--accent); padding-left: 10px; margin-top: 36px; }
+  h3 { font-size: 16px; margin-top: 26px; color: var(--accent); }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; margin: 12px 0; }
+  th, td { border: 1px solid var(--border); padding: 8px 12px; text-align: left; vertical-align: top; }
+  th { background: #eef2f6; font-weight: 600; }
+  tr:nth-child(even) td { background: #fafbfc; }
+  code { background: #eef2f6; border-radius: 4px; padding: 1px 6px; font-size: 13px;
+         font-family: Consolas, monospace; }
+  pre { background: #eef2f6; border-radius: 8px; padding: 12px 16px; overflow-x: auto; }
+  pre code { background: none; padding: 0; }
+  blockquote { border-left: 4px solid var(--accent); margin: 12px 0; padding: 4px 16px;
+               background: #f0f7ff; color: var(--ink); border-radius: 0 8px 8px 0; }
+  hr { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
+  a { color: var(--accent); }
+  .src { color: var(--sub); font-size: 12px; margin-top: 32px; border-top: 1px solid var(--border);
+         padding-top: 10px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>X運用戦略（確定版）</h1>
+<p>@FujihashiYuya の運用方針。<code>account.md</code> の補足として、日々の立ち回りと意思決定をまとめる。
+作成: 2026-06-29</p>
+<hr />
+<h2>1. ポジショニング（確定）</h2>
+<ul>
+<li><strong>軸</strong>: Webエンジニア（<strong>ときどきAI実装</strong>）。AIは看板にせず、Web/設計/インフラの実装知見を主軸にしつつ差別化として残す。</li>
+<li>理由: 投稿在庫26本のうちAIは3本でWeb中心 → bioで「AI実装に強い」と出すと中身とズレてフォローが定着しない。「誠実・実直」方針とも一致。AI実装の実務経験は早期キャリアでは希少なので捨てずに残す。</li>
+<li><strong>第一目的</strong>: フォロワー基盤づくり（CTAは控えめ、共感・学びログ中心で母数を作る）。</li>
+<li><strong>アカウント名</strong>: 実名 @FujihashiYuya を維持（信頼に効く）。</li>
+<li><strong>X Premium</strong>: 契約済み（認証バッジ）。リーチ約10倍・純正予約投稿・詳細分析を確保済み。</li>
+</ul>
+<h2>2. プロフィール（確定値）</h2>
+<ul>
+<li><strong>表示名</strong>: <code>Fujihashi Yuya｜Webエンジニア</code></li>
+<li><strong>bio</strong>:
+  <code>実務×個人開発のWebエンジニア｜設計・フロント・AWSインフラ、ときどきAI実装｜学びと「なぜそう作ったか」を毎日メモ｜Vue/Rails→React</code></li>
+<li><strong>プロフィール画像</strong>: 本人写真（◎）。顔が大きく鮮明になるようトリミング（胸から上）。</li>
+<li><strong>ヘッダー（任意）</strong>: 無地＋ <code>実務×個人開発のWebエンジニア / 設計・フロント・AWS・ときどきAI / 学びを毎日メモ</code></li>
+<li><strong>固定ツイート</strong>: 現状維持 or AI軸版に差し替え（任意）。</li>
+</ul>
+<h2>3. コンテンツの柱（比率の目安）</h2>
+<table>
+<thead>
+<tr>
+<th>柱</th>
+<th>目安</th>
+<th>中身</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Web・設計・インフラ</td>
+<td>35%</td>
+<td>実装判断・設計・AWS（在庫の主力）</td>
+</tr>
+<tr>
+<td>学習ログ</td>
+<td>30%</td>
+<td>Vue/Rails→React、読書、調べ物（共感・母数づくり）</td>
+</tr>
+<tr>
+<td>AI実装</td>
+<td>25%</td>
+<td>RAG/エージェント/LLM実装（差別化・ただし看板にしない）</td>
+</tr>
+<tr>
+<td>個人開発</td>
+<td>10%</td>
+<td>このX自動化など「作って動かす」過程（Web×AI×個人開発を一度に見せられる最良の素材）</td>
+</tr>
+</tbody>
+</table>
+<h2>4. 投稿の運用（方法B': cron-job.org → GitHub Actions 自動投稿）</h2>
+<blockquote>
+<p>2026-07-05 に方法A（X純正スケジューラ手動予約）から移行。方法Aを選んだ主因だった「GHA schedule の
+大幅遅延（news-paper 実測: +2.3〜5.6時間）」は、外部スケジューラ cron-job.org → <code>workflow_dispatch</code>
+で解消（起動&lt;1秒・分単位で正確）。最終チェックは日曜の承認時に行うため品質担保は変わらず、
+手動予約のクリック作業と tweet_ids 書き戻しの週1待ちが消える。投稿時刻は目標±1〜2分（実験には十分）。</p>
+</blockquote>
+<ul>
+<li><strong>投稿方法</strong>: 日曜に <code>status: 承認済み</code>＋<code>scheduled_at</code> を設定して push するだけ。cron-job.org が毎日
+  9/12/15/18/20/22時 JST に <code>post.yml</code> を起動し、due な投稿を X API で自動投稿 → <code>投稿済み</code>＋<code>tweet_ids</code>＋<code>posted_at</code> を即時書き戻し。</li>
+<li><strong>週次バッチ（日曜20〜30分）</strong>:</li>
+<li>自動生成済みの週次レポート（<code>analysis/&lt;YYYY&gt;-W&lt;WW&gt;_report.md</code>、日曜11時にGHAが生成）を読む → 次週の出し方を微調整</li>
+<li>翌週5枠のうち<strong>4本</strong>を <code>post/</code> の在庫から番号順に選び、本文を最終チェック（de-identify・文字数・トーン）</li>
+<li>4本を <code>status: 承認済み</code>＋<code>scheduled_at</code>（<strong>曜日・時刻をばらす</strong>。候補: 9/12/15/18/20/22時 JST。Tue〜Thuが技術系に強い、夜と昼を散らす）にして push＝予約完了</li>
+<li>返信ターゲットのリスト（<code>analysis/reply_targets.md</code>）を手入れ</li>
+</ul>
+<h3>外部スケジューラ設定（cron-job.org・一度だけ）</h3>
+<p>news-paper の README「セットアップ」と同一パターン。
+1. <strong>GitHub Fine-grained PAT</strong>: Repository access = <code>twitter_post</code> のみ / Permissions = <strong>Actions: Read and write</strong>
+2. <strong>cron-job.org に2ジョブ</strong>（Timezone = <code>Asia/Tokyo</code>、Method = <code>POST</code>、Body = <code>{"ref":"main"}</code>、
+   Headers = <code>Authorization: Bearer &lt;PAT&gt;</code> / <code>Accept: application/vnd.github+json</code> / <code>X-GitHub-Api-Version: 2022-11-28</code>）:
+   | ジョブ | スケジュール | URL |
+   |---|---|---|
+   | 投稿 | 毎日 9/12/15/18/20/22時 | <code>https://api.github.com/repos/&lt;owner&gt;/twitter_post/actions/workflows/post.yml/dispatches</code> |
+   | 週次指標+分析 | 日曜 11:00 | <code>https://api.github.com/repos/&lt;owner&gt;/twitter_post/actions/workflows/metrics.yml/dispatches</code> |
+3. <strong>GitHub Secrets に <code>CLAUDE_CODE_OAUTH_TOKEN</code> を追加</strong>（週次分析のClaude CLI用。news-paper と同じ値でよい）
+4. ハマりどころ: URLは正確な <code>https://</code>・末尾スラッシュ無し（cron-job.org はリダイレクトを追わない）。dispatch は毎回本物の実行。</p>
+<h3>ライブネタ枠（週1・在庫だけにしない）</h3>
+<ul>
+<li>週5枠のうち<strong>1枠は予約せず残し、当日「その週に実際あったこと」を手動投稿</strong>する（今日ハマったこと・いま作っているもの・学習の途中経過）。会話が生まれやすいのはライブネタで、返信エンジンとの相乗効果が目的。</li>
+<li>当週にネタがなければ在庫から1本出してよい（フォールバック。無理に捻り出さない）。</li>
+<li>投稿後は他と同じく md 化して <code>status: 投稿済み</code> で記録（重複防止のため）。</li>
+</ul>
+<h3>スレッド枠（月1〜2本・保存される型）</h3>
+<ul>
+<li>月1〜2本は<strong>5〜10ツイートのスレッド</strong>を企画する（手順・チェックリスト・移行記など「保存される型」。1ツイート1論点）。</li>
+<li>単発140字は流れて消えやすく、ブックマーク・プロフィール訪問を稼ぐのはスレッド。在庫の近縁テーマ（例: JWT/認可/OIDC、キャッシュ/TTL/レイテンシ）を束ねて再構成すると低コストで作れる。</li>
+<li>リンクを載せる場合は2ツイート目（=最初の返信）に置く（本文リンクはリーチ激減）。</li>
+<li><strong>コピー範囲</strong>: X に貼るのは md の <code># 投稿文</code> と <code>## メタ情報</code> の<strong>間の本文だけ</strong>（frontmatter・メタ情報は貼らない）。</li>
+<li><strong>投稿順</strong>: <code>post/20260624_01〜26</code> は「脱クラスタ化した投稿順」。1本ずつは安全でも連投すると構成が推測されるため、AI系・認証系・データ系を週またぎで散らしてある。番号順に出せばよい。</li>
+</ul>
+<h3>ステータス運用</h3>
+<ul>
+<li>通常ライフサイクル: <code>下書き</code> → （日曜レビューで）<code>承認済み</code>＋<code>scheduled_at</code> → （GHAが自動で）<code>投稿済み</code>＋<code>tweet_ids</code>＋<code>posted_at</code>。</li>
+<li><strong><code>予約済み</code></strong> は「GHAを通さず手動 or X純正スケジューラで出す」<strong>例外用</strong>。自動投稿対象外で、
+  週次の reconcile（<code>fetch_metrics.py</code>）がタイムライン突合で <code>投稿済み</code> に更新する（保険機構）。
+  ライブネタ枠の手動投稿も、投稿後に md 化して <code>予約済み</code> にしておけば reconcile が tweet_id を拾う。</li>
+<li>二重投稿防止: 同じ投稿を「承認済みにしてX純正予約もする」ことだけはしない（GHAとXの両方から出る）。</li>
+</ul>
+<h2>5. 立ち回りプレイブック（平日 15〜30分／最大の成長エンジン）</h2>
+<p>小規模アカウントの伸びの約半分は「自分の投稿」でなく「返信」から。平日は投稿せず（予約済み）、時間を返信に充てる。</p>
+<pre><code>① 3分      自分の前回投稿への反応に全返信（来た人と会話を続ける）
+② 15〜20分  &quot;少し上&quot;の同分野アカウントへ価値ある返信 5〜8件 ← 最大のレバー
+            ＋ 良い技術ポストを1〜2件 引用RT（自分の一言を添える）
+③ 3〜5分   リスト/TLを読んで情報キャッチアップ（=次の投稿ネタ集め）／関連を数人フォロー
+</code></pre>
+<ul>
+<li><strong>返信ターゲット</strong>: <code>analysis/reply_targets.md</code> を毎日上から見て返信先を探す（アンカー＋5〜20倍規模の本命、発掘方法つき）。大物(数万)は埋もれるので狙わない。週次バッチで入れ替え。</li>
+<li><strong>効く返信</strong>: データ・自分の経験・丁寧な問い・節度ある別視点を足す（著者が返信し返したくなる水準）。「すごい！」の一言はNG。</li>
+<li><strong>フォロー</strong>: 1日5〜10人、関連のみ。フォロー/アンフォロー乱発はシャドウバン要因なのでNG。</li>
+<li><strong>やらない</strong>: 相互フォロー、エンゲージメント・プール、「いいねしたら〜」系、煽り。短期で伸びても信頼を失い目的と逆行。</li>
+<li><strong>ハッシュタグ</strong>: 原則なし（発見効果は薄く、3つ以上は逆効果）。<strong>#駆け出しエンジニア/#エンジニアと繋がりたい は信頼を損なうので使わない</strong>。健全な #個人開発 を本当に該当する投稿に1つだけは可。</li>
+</ul>
+<h2>6. KPI・ベンチマーク</h2>
+<ul>
+<li>主要KPI: <strong>プロフィール訪問→フォロー転換率</strong>（先行指標）／保存数／返信数。フォロワー数だけを追わない。</li>
+<li>現実値: 無課金相当の通常運用で月+50〜150、1,000人まで6〜12ヶ月。Premium保有で上振れ余地あり。</li>
+<li>週次に <code>/analyze-x-week</code> で「曜日×時刻」「テーマ」別の伸びを確認し、翌週に反映。</li>
+</ul>
+<h2>7. 既知の課題 / TODO</h2>
+<ul>
+<li>~~<strong>指標収集の穴</strong>~~ → <strong>改修済み（2026-07-05）</strong>: <code>xtools/fetch_metrics.py</code> が「<code>status: 予約済み</code> で tweet_ids 未記入の投稿」をユーザータイムライン（<code>GET /2/users/:id/tweets</code>）と本文突合し、<code>投稿済み</code>＋<code>tweet_ids</code>＋<code>posted_at</code>（実投稿時刻）を md に自動で書き戻す。方法B'移行後は手動投稿分の保険機構として機能。</li>
+<li>~~GitHub Actions の schedule 遅延~~ → <strong>解消（2026-07-05）</strong>: <code>post.yml</code>/<code>metrics.yml</code> とも <code>schedule:</code> を撤去し、cron-job.org → <code>workflow_dispatch</code> 起動に移行（§4参照）。<strong>cron-job.org のジョブ登録と <code>CLAUDE_CODE_OAUTH_TOKEN</code> Secret 追加が未完なら先に実施</strong>。</li>
+<li>第1週の5本（20260624_01〜05・<code>予約済み</code>のまま）は、移行後最初の <code>metrics.yml</code> 実行で reconcile が <code>投稿済み</code> に更新する見込み。</li>
+<li>機密資料 <code>docs/source/</code> は gitignore 済み（リモート非公開）。投稿作成時は必ず de-identify。</li>
+<li>発注者導線（リードマグネット・bio/固定ツイートの「対」運用・Zenn/Qiita連携）は<strong>フォロワー300〜500到達をトリガー</strong>に着手する（それまでは母数づくりに集中）。</li>
+</ul>
+<div class="src">source: analysis/x_strategy.md（このHTMLは派生物。更新は md 側で行い <code>python tools/md2html.py</code> で再生成）</div>
+</div>
+</body>
+</html>
