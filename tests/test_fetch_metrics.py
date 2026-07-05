@@ -207,6 +207,32 @@ def test_reconcile_thread_requires_all_tweets_matched(tmp_path):
     assert post.status == "予約済み"  # 全ツイート揃うまで書き戻さない
 
 
+def test_reconcile_matches_when_linebreaks_added_at_post_time(tmp_path):
+    # X純正スケジューラ予約時に画面上で改行を足して投稿したケース（実運用で発生）
+    from xtools import postfile
+    path = _scheduled(tmp_path, "a.md", body="一行で書いた本文。続きの文。")
+    client = FakeTimelineClient(
+        timeline=[{"id": "600", "text": "一行で書いた本文。\n\n続きの文。",
+                   "created_at": "2026-06-22T03:00:00.000Z"}],
+    )
+    fetch_metrics.fetch(now=datetime(2026, 6, 28, 12, 0, tzinfo=JST), client=client, post_dir=tmp_path, csv_path=tmp_path / "m.csv")
+    post = postfile.parse_post(path)
+    assert post.tweet_ids == ["600"]
+
+
+def test_reconcile_matches_when_punctuation_edited_at_post_time(tmp_path):
+    # 手動投稿時に「。→改行」「箇条書きの・追加」等の手直しが入ったケース（実運用で確認）
+    from xtools import postfile
+    path = _scheduled(tmp_path, "a.md", body="黄金律はDB=UTC・処理=UTC・API=ISO8601。表示だけ変換。")
+    client = FakeTimelineClient(
+        timeline=[{"id": "700", "text": "黄金律は\n・DB=UTC\n・処理=UTC\nAPI=ISO8601\n表示だけ変換。",
+                   "created_at": "2026-06-22T03:00:00.000Z"}],
+    )
+    fetch_metrics.fetch(now=datetime(2026, 6, 28, 12, 0, tzinfo=JST), client=client, post_dir=tmp_path, csv_path=tmp_path / "m.csv")
+    post = postfile.parse_post(path)
+    assert post.tweet_ids == ["700"]
+
+
 def test_reconcile_matches_despite_tco_links_and_html_escape(tmp_path):
     from xtools import postfile
     path = _scheduled(tmp_path, "a.md", body="設計の参考リンク https://example.com/long/path と Q&A")

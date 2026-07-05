@@ -2,6 +2,7 @@ import argparse
 import csv
 import html
 import re
+import unicodedata
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -47,10 +48,12 @@ _URL_RE = re.compile(r"https?://\S+")
 
 
 def _match_key(text: str) -> str:
-    # API側はURLがt.co短縮・&等がHTMLエスケープで返るため、両方を落として比較する
+    # API側はURLがt.co短縮・&等がHTMLエスケープで返り、手動投稿時は改行・句読点・記号の
+    # 手直しも入る（実運用で確認）。文字(L)と数字(N)だけを残して比較する。
+    # 本文は100文字超で内容が投稿ごとに異なるため、この正規化でも誤マッチは実質起きない。
     text = html.unescape(text)
     text = _URL_RE.sub("", text)
-    return re.sub(r"\s+", " ", text).strip()
+    return "".join(ch for ch in text if unicodedata.category(ch)[0] in ("L", "N"))
 
 
 def _to_jst_iso(created_at: str) -> str:
