@@ -1,12 +1,12 @@
 ---
-status: 予約済み
-scheduled_at: "2026-06-29T12:00:00+09:00"
+status: 投稿済み
+scheduled_at: '2026-06-29T12:00:00+09:00'
 category: 技術ログ
 thread: false
-posted_at:
-tweet_ids: []
+posted_at: '2026-06-29T12:00:00+09:00'
+tweet_ids:
+- '2071428442910847249'
 ---
-
 # 投稿文
 
 JWTで一番ハマる誤解：decodeとverifyは別物。payloadはBase64なだけで誰でも読めるし、jwt-decode系は署名を見ない。だから「期限内か」しか分からず、claimを書き換えた偽トークンも通る。本物の保証は毎リクエストの署名検証(verify)の方だと痛感した。
