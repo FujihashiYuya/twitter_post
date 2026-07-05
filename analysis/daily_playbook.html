@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>X運用 実践プレイブック（投稿以外にやること）</title>
+<style>
+  :root {
+    --bg: #f6f8fa; --card: #ffffff; --ink: #1f2328; --sub: #57606a;
+    --accent: #0969da; --border: #d0d7de;
+  }
+  * { box-sizing: border-box; }
+  body { font-family: "Hiragino Sans", "Yu Gothic UI", "Meiryo", sans-serif;
+         background: var(--bg); color: var(--ink); margin: 0; padding: 32px 16px; line-height: 1.75; }
+  .wrap { max-width: 900px; margin: 0 auto; background: var(--card);
+          border: 1px solid var(--border); border-radius: 10px; padding: 32px 40px; }
+  h1 { font-size: 25px; border-bottom: 2px solid var(--accent); padding-bottom: 8px; }
+  h2 { font-size: 19px; border-left: 5px solid var(--accent); padding-left: 10px; margin-top: 36px; }
+  h3 { font-size: 16px; margin-top: 26px; color: var(--accent); }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; margin: 12px 0; }
+  th, td { border: 1px solid var(--border); padding: 8px 12px; text-align: left; vertical-align: top; }
+  th { background: #eef2f6; font-weight: 600; }
+  tr:nth-child(even) td { background: #fafbfc; }
+  code { background: #eef2f6; border-radius: 4px; padding: 1px 6px; font-size: 13px;
+         font-family: Consolas, monospace; }
+  pre { background: #eef2f6; border-radius: 8px; padding: 12px 16px; overflow-x: auto; }
+  pre code { background: none; padding: 0; }
+  blockquote { border-left: 4px solid var(--accent); margin: 12px 0; padding: 4px 16px;
+               background: #f0f7ff; color: var(--ink); border-radius: 0 8px 8px 0; }
+  hr { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
+  a { color: var(--accent); }
+  .src { color: var(--sub); font-size: 12px; margin-top: 32px; border-top: 1px solid var(--border);
+         padding-top: 10px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>X運用 実践プレイブック（投稿以外にやること）</h1>
+<p>投稿は全自動化済み（cron-job.org → GitHub Actions）。<strong>アカウントの成長は投稿ではなく、ここに書く手動の活動から生まれる</strong>（小規模アカウントの成長の約半分は「返信」から）。
+作成: 2026-07-05 ／ 戦略の根拠は <code>x_strategy.md</code>、このファイルは「手順書」。</p>
+<hr />
+<h2>全体像：何を・いつ・どれくらい</h2>
+<table>
+<thead>
+<tr>
+<th>活動</th>
+<th>頻度</th>
+<th>時間</th>
+<th>効果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>⓪ 本命リストを埋める</td>
+<td><strong>初回のみ（今週中）</strong></td>
+<td>30分</td>
+<td>以降の返信活動の土台</td>
+</tr>
+<tr>
+<td>① 返信活動</td>
+<td>平日毎日</td>
+<td>15〜30分</td>
+<td><strong>最大の成長エンジン</strong></td>
+</tr>
+<tr>
+<td>② ライブネタ投稿</td>
+<td>週1（好きな平日）</td>
+<td>5分</td>
+<td>会話の起点・人間味</td>
+</tr>
+<tr>
+<td>③ 週次バッチ</td>
+<td>日曜</td>
+<td>20〜30分</td>
+<td>翌週分の承認・振り返り</td>
+</tr>
+<tr>
+<td>④ アナリティクス確認</td>
+<td>月1</td>
+<td>10分</td>
+<td>API で取れないKPIの確認</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>⓪ 初回タスク：本命リストを10人埋める（30分）</h2>
+<p><code>reply_targets.md</code> の「B. 返信ターゲット」は今空欄。ここを埋めないと①が始められない。</p>
+<ol>
+<li>Xアプリで <strong>@minorun365 / @uhyo_ / @jnchito</strong> など（<code>reply_targets.md</code> のA表）を開く</li>
+<li>各人の最新ポストの<strong>リプ欄</strong>を見る → 「一言じゃない、ちゃんとした返信」をしている人のプロフィールを開く</li>
+<li><strong>フォロワー500〜3,000 ＋ Web/AI/個人開発の発信 ＋ リプ欄が会話になっている</strong> ならリスト入り</li>
+<li>補助ルート: <a href="https://zenn.dev">zenn.devトレンド</a> 記事著者のXリンク／Xで <code>#個人開発</code> を検索→「最新」タブ</li>
+<li>見つけた人を:</li>
+<li><code>analysis/reply_targets.md</code> のB表に追記（@ID・一言メモ・規模・返信で足せる自分の価値）</li>
+<li><strong>Xの非公開リストに追加</strong>：自分のプロフィール → リスト → 作成 →「返信先」→ <strong>非公開ON</strong> → メンバー追加</li>
+<li>フォローもするなら1日5〜10人まで（乱発はシャドウバン要因）</li>
+</ol>
+<hr />
+<h2>① 平日ルーティン：返信活動（15〜30分）</h2>
+<p>通勤中・昼休みでOK。時間割：</p>
+<h3>(1) 通知チェック — 3分</h3>
+<ul>
+<li>自分の投稿への返信には<strong>全部</strong>返す（24時間以内、投稿後30分は最優先）</li>
+<li>いいねだけくれた人は、相手のプロフィールを一瞬見て、合いそうなら投稿にいいねを返す</li>
+</ul>
+<h3>(2) 本命への返信 5〜8件 — 15〜20分（ここが本体）</h3>
+<ul>
+<li>Xの非公開リスト「返信先」を開く → <strong>当日投稿している人</strong>を上から探す</li>
+<li>投稿直後（1時間以内）ほど良い。上位返信の位置を取れる</li>
+<li><strong>そのまま使える返信の型</strong>（自分の実体験を1つ入れるのがコツ）:</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>型</th>
+<th>例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>経験共有</td>
+<td>「同じ場面ありました。自分は◯◯で解決したんですが、△△のケースはどうされてますか？」</td>
+</tr>
+<tr>
+<td>深掘り質問</td>
+<td>「◯◯の部分が気になりました。△△ではなくこちらを選んだ決め手って何かあったんでしょうか」</td>
+</tr>
+<tr>
+<td>データ・補足</td>
+<td>「これ◯◯でも同様でした。実測だと△△だったので、規模によって変わりそうですね」</td>
+</tr>
+<tr>
+<td>節度ある別視点</td>
+<td>「なるほどです。逆に◯◯の場合は△△が効いた経験があって、使い分けかもしれません」</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>NG</strong>: 「すごい！」「参考になります」だけ／絵文字のみ／自分の宣伝。著者が「返信し返したくなるか」が基準</li>
+<li>相手から返信が来たら会話を1〜2往復続ける（この往復がアルゴリズム上いちばん重い）</li>
+</ul>
+<h3>(3) 引用RT＋ネタ集め — 3〜5分</h3>
+<ul>
+<li>良い技術ポストを1〜2件、<strong>自分の一言（経験・意見）を添えて</strong>引用RT</li>
+<li>タイムラインで気づいたこと・今日ハマったことをメモ → ②のライブネタや次バッチの種にする</li>
+</ul>
+<hr />
+<h2>② ライブネタ投稿：週1（5分）</h2>
+<ul>
+<li>その週に<strong>実際あったこと</strong>を1本手動投稿：今日ハマったバグ、いま作っているもの、学習の途中経過</li>
+<li>完成した話より<strong>途中の話</strong>。「〜で迷っている」「〜という理解で合ってるだろうか」のような
+  問いかけで終えると返信が来やすい</li>
+<li>予約枠と同じ日でも構わない（1日2本になっても問題ない）</li>
+<li><strong>投稿後の記録</strong>: <code>post/</code> に md 化して <code>status: 予約済み</code> で push しておく
+  → 日曜の自動処理（reconcile）が tweet_id を拾い、指標収集に乗る。整形は <code>/create-x-post</code> に頼めばよい</li>
+</ul>
+<hr />
+<h2>③ 日曜バッチ（20〜30分）</h2>
+<ol>
+<li><code>git pull</code> → <strong><code>analysis/</code> の最新週次レポートを読む</strong>（日曜11時に自動生成済み）</li>
+<li>レポートの改善提案を見て、翌週の出し方を決める</li>
+<li>在庫レビュー：次に出す下書きを確認（<strong>現在庫は7/25で尽きる</strong> → <code>/create-x-post</code> で補充）</li>
+<li>出すものの frontmatter を <code>status: 承認済み</code>＋<code>scheduled_at</code>（9/12/15/18/20/22時をばらす）にして <strong>push</strong> ＝予約完了</li>
+<li><code>reply_targets.md</code> の手入れ：反応をくれた人を追加、2週間反応がない人を入れ替え</li>
+</ol>
+<hr />
+<h2>④ 月1：Premiumアナリティクス確認（10分）</h2>
+<ul>
+<li>Xアプリ → プレミアム → アナリティクス で <strong>プロフィール訪問数（アクセス）とフォロワー増減</strong>を確認
+  （この2つはAPIで取れないため自動レポートに含まれない）</li>
+<li>「プロフィール訪問は増えているのにフォローが増えない」→ bio・固定ツイートを見直す合図（<code>account.md</code> の確定版と見比べる）</li>
+</ul>
+<hr />
+<h2>資料マップ（どこに何が書いてあるか）</h2>
+<table>
+<thead>
+<tr>
+<th>資料</th>
+<th>内容</th>
+<th>使う場面</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>analysis/daily_playbook.md</code>（本書）</td>
+<td>手動活動の<strong>手順書</strong></td>
+<td>毎日・毎週</td>
+</tr>
+<tr>
+<td><code>analysis/reply_targets.md</code></td>
+<td>返信先リスト（アンカー＋本命）</td>
+<td>平日の返信活動</td>
+</tr>
+<tr>
+<td><code>analysis/x_strategy.md</code></td>
+<td>戦略の<strong>根拠</strong>・cron-job.org設定・ステータス運用</td>
+<td>迷ったとき・再設定</td>
+</tr>
+<tr>
+<td><code>account.md</code></td>
+<td>アカウント方針（ターゲット・NG・文体・KPI）</td>
+<td>投稿やbioを書くとき</td>
+</tr>
+<tr>
+<td><code>analysis/&lt;YYYY&gt;-W&lt;WW&gt;_report.md</code></td>
+<td>週次の自動分析レポート</td>
+<td>日曜バッチの最初</td>
+</tr>
+<tr>
+<td><code>CLAUDE.md</code></td>
+<td>投稿ファイルの書式・自動化の概要</td>
+<td>md を書くとき</td>
+</tr>
+</tbody>
+</table>
+<p>※ 各mdは同名の <code>.html</code> でも閲覧可（<code>python tools/md2html.py &lt;ファイル&gt;</code> で再生成）</p>
+<div class="src">source: analysis/daily_playbook.md（このHTMLは派生物。更新は md 側で行い <code>python tools/md2html.py</code> で再生成）</div>
+</div>
+</body>
+</html>
