@@ -9,7 +9,7 @@ description: Drafts a new X (Twitter) post for the @FujihashiYuya account and sa
 
 ## 手順
 
-1. **方針確認**: `account.md`（ターゲット読者・コンテンツ比率・NGルール・文体）と `CLAUDE.md`（投稿レビューチェックリスト）を参照する。
+1. **方針確認**: `account.html`（ターゲット読者・コンテンツ比率・NGルール・文体）と `CLAUDE.md`（投稿レビューチェックリスト）を参照する。
 
 2. **テーマ決定**: `post/*.md` の過去投稿と重複しないテーマを選ぶ。コンテンツ比率（技術ログ40% / 学習習慣30% / ツール活用20% / 個人開発10%）を意識する。
 

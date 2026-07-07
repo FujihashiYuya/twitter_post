@@ -37,7 +37,7 @@
 <div class="wrap">
 <h1>X運用 実践プレイブック（投稿以外にやること）</h1>
 <p>投稿は全自動化済み（cron-job.org → GitHub Actions）。<strong>アカウントの成長は投稿ではなく、ここに書く手動の活動から生まれる</strong>（小規模アカウントの成長の約半分は「返信」から）。
-作成: 2026-07-05 ／ 戦略の根拠は <code>x_strategy.md</code>、このファイルは「手順書」。</p>
+作成: 2026-07-05 ／ 戦略の根拠は <code>x_strategy.html</code>、このファイルは「手順書」。</p>
 <hr />
 <h2>全体像：何を・いつ・どれくらい</h2>
 <table>
@@ -84,20 +84,58 @@
 </table>
 <hr />
 <h2>⓪ 初回タスク：本命リストを10人埋める（30分）</h2>
-<p><code>reply_targets.md</code> の「B. 返信ターゲット」は今空欄。ここを埋めないと①が始められない。</p>
+<p><code>reply_targets.html</code> の「B. 返信ターゲット」は今空欄。ここを埋めないと①が始められない。</p>
 <ol>
-<li>Xアプリで <strong>@minorun365 / @uhyo_ / @jnchito</strong> など（<code>reply_targets.md</code> のA表）を開く</li>
+<li>Xアプリで <strong>@minorun365 / @uhyo_ / @jnchito</strong> など（<code>reply_targets.html</code> のA表）を開く</li>
 <li>各人の最新ポストの<strong>リプ欄</strong>を見る → 「一言じゃない、ちゃんとした返信」をしている人のプロフィールを開く</li>
 <li><strong>フォロワー500〜3,000 ＋ Web/AI/個人開発の発信 ＋ リプ欄が会話になっている</strong> ならリスト入り</li>
 <li>補助ルート: <a href="https://zenn.dev">zenn.devトレンド</a> 記事著者のXリンク／Xで <code>#個人開発</code> を検索→「最新」タブ</li>
 <li>見つけた人を:</li>
-<li><code>analysis/reply_targets.md</code> のB表に追記（@ID・一言メモ・規模・返信で足せる自分の価値）</li>
+<li><code>analysis/reply_targets.html</code> のB表に追記（@ID・一言メモ・規模・返信で足せる自分の価値）</li>
 <li><strong>Xの非公開リストに追加</strong>：自分のプロフィール → リスト → 作成 →「返信先」→ <strong>非公開ON</strong> → メンバー追加</li>
 <li>フォローもするなら1日5〜10人まで（乱発はシャドウバン要因）</li>
 </ol>
 <hr />
 <h2>① 平日ルーティン：返信活動（15〜30分）</h2>
 <p>通勤中・昼休みでOK。時間割：</p>
+<h3>迷ったら：アクション判断フロー（デフォルトは返信）</h3>
+<pre><code>良い投稿を見つけた
+├─ 自分の経験・データ・問いを足せる → 返信する（第一選択）
+├─ 足せる一言はあるが会話にはならなそう → 引用RT（週1〜2の枠内で）
+├─ 何も足せないが良かった → いいねだけ
+└─ フォロワーに丸ごと見せたい → 無言リポスト（例外的に）
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>行動</th>
+<th>成長への効果</th>
+<th>適量</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>返信（価値を足すリプライ）</td>
+<td>◎ 本体。著者のフォロワー全員に露出＋往復が最重み</td>
+<td>平日5〜8件</td>
+</tr>
+<tr>
+<td>引用リポスト（一言つき）</td>
+<td>○ 補助</td>
+<td>週1〜2件まで（多いと自分の発信が埋もれる）</td>
+</tr>
+<tr>
+<td>無言リポスト</td>
+<td>△ 自分の発言ゼロ＝人となりが伝わらない</td>
+<td>基本しない</td>
+</tr>
+<tr>
+<td>いいね</td>
+<td>△ 関係の潤滑油</td>
+<td>気軽に。ただし返信の代わりにはならない</td>
+</tr>
+</tbody>
+</table>
 <h3>(1) 通知チェック — 3分</h3>
 <ul>
 <li>自分の投稿への返信には<strong>全部</strong>返す（24時間以内、投稿後30分は最優先）</li>
@@ -161,14 +199,14 @@
 <li>レポートの改善提案を見て、翌週の出し方を決める</li>
 <li>在庫レビュー：次に出す下書きを確認（<strong>現在庫は7/25で尽きる</strong> → <code>/create-x-post</code> で補充）</li>
 <li>出すものの frontmatter を <code>status: 承認済み</code>＋<code>scheduled_at</code>（9/12/15/18/20/22時をばらす）にして <strong>push</strong> ＝予約完了</li>
-<li><code>reply_targets.md</code> の手入れ：反応をくれた人を追加、2週間反応がない人を入れ替え</li>
+<li><code>reply_targets.html</code> の手入れ：反応をくれた人を追加、2週間反応がない人を入れ替え</li>
 </ol>
 <hr />
 <h2>④ 月1：Premiumアナリティクス確認（10分）</h2>
 <ul>
 <li>Xアプリ → プレミアム → アナリティクス で <strong>プロフィール訪問数（アクセス）とフォロワー増減</strong>を確認
   （この2つはAPIで取れないため自動レポートに含まれない）</li>
-<li>「プロフィール訪問は増えているのにフォローが増えない」→ bio・固定ツイートを見直す合図（<code>account.md</code> の確定版と見比べる）</li>
+<li>「プロフィール訪問は増えているのにフォローが増えない」→ bio・固定ツイートを見直す合図（<code>account.html</code> の確定版と見比べる）</li>
 </ul>
 <hr />
 <h2>資料マップ（どこに何が書いてあるか）</h2>
@@ -182,22 +220,22 @@
 </thead>
 <tbody>
 <tr>
-<td><code>analysis/daily_playbook.md</code>（本書）</td>
+<td><code>analysis/daily_playbook.html</code>（本書）</td>
 <td>手動活動の<strong>手順書</strong></td>
 <td>毎日・毎週</td>
 </tr>
 <tr>
-<td><code>analysis/reply_targets.md</code></td>
+<td><code>analysis/reply_targets.html</code></td>
 <td>返信先リスト（アンカー＋本命）</td>
 <td>平日の返信活動</td>
 </tr>
 <tr>
-<td><code>analysis/x_strategy.md</code></td>
+<td><code>analysis/x_strategy.html</code></td>
 <td>戦略の<strong>根拠</strong>・cron-job.org設定・ステータス運用</td>
 <td>迷ったとき・再設定</td>
 </tr>
 <tr>
-<td><code>account.md</code></td>
+<td><code>account.html</code></td>
 <td>アカウント方針（ターゲット・NG・文体・KPI）</td>
 <td>投稿やbioを書くとき</td>
 </tr>
@@ -214,7 +252,7 @@
 </tbody>
 </table>
 <p>※ 各mdは同名の <code>.html</code> でも閲覧可（<code>python tools/md2html.py &lt;ファイル&gt;</code> で再生成）</p>
-<div class="src">source: analysis/daily_playbook.md（このHTMLは派生物。更新は md 側で行い <code>python tools/md2html.py</code> で再生成）</div>
+<div class="src">原本: daily_playbook.html（mdは廃止済み。更新はこのHTMLを直接編集）</div>
 </div>
 </body>
 </html>

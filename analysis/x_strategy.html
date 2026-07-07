@@ -36,7 +36,7 @@
 <body>
 <div class="wrap">
 <h1>X運用戦略（確定版）</h1>
-<p>@FujihashiYuya の運用方針。<code>account.md</code> の補足として、日々の立ち回りと意思決定をまとめる。
+<p>@FujihashiYuya の運用方針。<code>account.html</code> の補足として、日々の立ち回りと意思決定をまとめる。
 作成: 2026-06-29</p>
 <hr />
 <h2>1. ポジショニング（確定）</h2>
@@ -102,7 +102,7 @@
 <li>自動生成済みの週次レポート（<code>analysis/&lt;YYYY&gt;-W&lt;WW&gt;_report.md</code>、日曜11時にGHAが生成）を読む → 次週の出し方を微調整</li>
 <li>翌週5枠のうち<strong>4本</strong>を <code>post/</code> の在庫から番号順に選び、本文を最終チェック（de-identify・文字数・トーン）</li>
 <li>4本を <code>status: 承認済み</code>＋<code>scheduled_at</code>（<strong>曜日・時刻をばらす</strong>。候補: 9/12/15/18/20/22時 JST。Tue〜Thuが技術系に強い、夜と昼を散らす）にして push＝予約完了</li>
-<li>返信ターゲットのリスト（<code>analysis/reply_targets.md</code>）を手入れ</li>
+<li>返信ターゲットのリスト（<code>analysis/reply_targets.html</code>）を手入れ</li>
 </ul>
 <h3>外部スケジューラ設定（cron-job.org・一度だけ）</h3>
 <p>news-paper の README「セットアップ」と同一パターン。
@@ -145,8 +145,9 @@
 ③ 3〜5分   リスト/TLを読んで情報キャッチアップ（=次の投稿ネタ集め）／関連を数人フォロー
 </code></pre>
 <ul>
-<li><strong>返信ターゲット</strong>: <code>analysis/reply_targets.md</code> を毎日上から見て返信先を探す（アンカー＋5〜20倍規模の本命、発掘方法つき）。大物(数万)は埋もれるので狙わない。週次バッチで入れ替え。</li>
+<li><strong>返信ターゲット</strong>: <code>analysis/reply_targets.html</code> を毎日上から見て返信先を探す（アンカー＋5〜20倍規模の本命、発掘方法つき）。大物(数万)は埋もれるので狙わない。週次バッチで入れ替え。</li>
 <li><strong>効く返信</strong>: データ・自分の経験・丁寧な問い・節度ある別視点を足す（著者が返信し返したくなる水準）。「すごい！」の一言はNG。</li>
+<li><strong>アクション判断フロー（迷ったらデフォルトは返信）</strong>: 何か足せる→<strong>返信</strong>（第一選択）／一言あるが会話にならなそう→<strong>引用RT</strong>（週1〜2枠内）／足せないが良い→<strong>いいねだけ</strong>／丸ごと見せたい→無言リポスト（例外的）。無言リポストの多用は自分の発言ゼロで成長に寄与しないため避ける。詳細は <code>daily_playbook.html</code> ①。</li>
 <li><strong>フォロー</strong>: 1日5〜10人、関連のみ。フォロー/アンフォロー乱発はシャドウバン要因なのでNG。</li>
 <li><strong>やらない</strong>: 相互フォロー、エンゲージメント・プール、「いいねしたら〜」系、煽り。短期で伸びても信頼を失い目的と逆行。</li>
 <li><strong>ハッシュタグ</strong>: 原則なし（発見効果は薄く、3つ以上は逆効果）。<strong>#駆け出しエンジニア/#エンジニアと繋がりたい は信頼を損なうので使わない</strong>。健全な #個人開発 を本当に該当する投稿に1つだけは可。</li>
@@ -165,7 +166,7 @@
 <li>機密資料 <code>docs/source/</code> は gitignore 済み（リモート非公開）。投稿作成時は必ず de-identify。</li>
 <li>発注者導線（リードマグネット・bio/固定ツイートの「対」運用・Zenn/Qiita連携）は<strong>フォロワー300〜500到達をトリガー</strong>に着手する（それまでは母数づくりに集中）。</li>
 </ul>
-<div class="src">source: analysis/x_strategy.md（このHTMLは派生物。更新は md 側で行い <code>python tools/md2html.py</code> で再生成）</div>
+<div class="src">原本: x_strategy.html（mdは廃止済み。更新はこのHTMLを直接編集）</div>
 </div>
 </body>
 </html>

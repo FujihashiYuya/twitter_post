@@ -84,8 +84,8 @@
 <li><strong>日曜にまとめて翌週分（4本）を承認</strong>：<code>post/</code> の在庫を番号順にレビュー → <code>status: 承認済み</code>＋<code>scheduled_at</code>（曜日・時刻をばらす＝時間帯の実験）を設定して <strong>push</strong>。投稿は cron-job.org → GitHub Actions <code>post.yml</code> が定時（±1〜2分）に自動実行。承認＝最終チェック</li>
 <li><strong>週5枠のうち1枠はライブネタ枠</strong>：予約せず残し、当日「その週に実際あったこと」を手動投稿（会話が生まれやすく、返信エンジンと相乗）。ネタがなければ在庫でフォールバック</li>
 <li><strong>月1〜2本はスレッド型（5〜10ツイート）</strong>：手順・チェックリスト等の「保存される型」。単発140字だけでは保存・プロフィール訪問が伸びない</li>
-<li>平日は投稿せず、<strong>1日15〜30分を返信・引用RT等の能動的な立ち回り</strong>に充てる（下記エンゲージメント方針＝最大の成長エンジン）。返信先は <code>analysis/reply_targets.md</code> を参照</li>
-<li>詳細な運用手順は <code>analysis/x_strategy.md</code> を参照</li>
+<li>平日は投稿せず、<strong>1日15〜30分を返信・引用RT等の能動的な立ち回り</strong>に充てる（下記エンゲージメント方針＝最大の成長エンジン）。返信先は <code>analysis/reply_targets.html</code> を参照</li>
+<li>詳細な運用手順は <code>analysis/x_strategy.html</code> を参照</li>
 </ul>
 <h3>投稿候補時間帯（実験中）</h3>
 <p>反応の良い時間帯を統計的に探るため、以下の候補時刻(JST)を曜日・時刻でばらして投稿し、週次レポート（GitHub Actionsが日曜に自動生成）で時間帯×曜日別に検証する。
@@ -437,7 +437,7 @@ AIエージェントの開発が注目されていますが、設計や要件定
 <pre><code>個人でアプリを作るときは、他人のニーズを探すより「自分の課題を解決すること」から始めるのが一番しっくりくる。
 そう気づいて、今日から日々の気づきも記録していくことにしました。
 </code></pre>
-<div class="src">source: account.md（このHTMLは派生物。更新は md 側で行い <code>python tools/md2html.py</code> で再生成）</div>
+<div class="src">原本: account.html（mdは廃止済み。更新はこのHTMLを直接編集）</div>
 </div>
 </body>
 </html>

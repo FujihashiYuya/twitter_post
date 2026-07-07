@@ -1,10 +1,12 @@
-"""運用ドキュメント(md)を閲覧用HTMLに変換する。
+"""md を閲覧用HTMLに変換する。
 
 使い方:
-    python tools/md2html.py account.md analysis/x_strategy.md analysis/reply_targets.md
+    python tools/md2html.py analysis/2026-W27_report.md
 
-出力は入力と同じ場所に同名の .html。md が正（skillsやCLAUDE.mdが参照する）で、
-HTML は閲覧用の派生物。md を更新したら再実行して差し替える。
+出力は入力と同じ場所に同名の .html。
+注意: 運用ドキュメント（account / x_strategy / reply_targets / daily_playbook）は
+2026-07-07 に **HTMLが原本** になった（md版は廃止）。このスクリプトは
+週次レポート等「mdで自動生成されるファイル」をHTML閲覧したい場合にのみ使う。
 """
 import sys
 from pathlib import Path
