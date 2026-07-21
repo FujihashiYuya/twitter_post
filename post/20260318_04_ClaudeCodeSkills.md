@@ -1,3 +1,12 @@
+---
+status: 投稿済み
+scheduled_at: null
+category: ツール活用
+thread: false
+posted_at: '2026-03-25T12:30:00+09:00'
+tweet_ids:
+- '2036646756977373236'
+---
 # 投稿文
 
 Claude Codeのskills機能を使ってみたら、定例業務がかなり効率化された。
