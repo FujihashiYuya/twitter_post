@@ -1,6 +1,6 @@
 ---
 status: 承認済み
-scheduled_at: "2026-07-31T12:00:00+09:00"
+scheduled_at: "2026-07-29T12:00:00+09:00"
 category: 学習習慣
 thread: false
 posted_at:
