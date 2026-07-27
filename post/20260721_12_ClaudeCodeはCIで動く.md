@@ -1,5 +1,5 @@
 ---
-status: 下書き
+status: 承認済み
 scheduled_at: "2026-08-07T12:00:00+09:00"
 category: ツール活用
 thread: false

@@ -1,5 +1,5 @@
 ---
-status: 下書き
+status: 承認済み
 scheduled_at: "2026-07-30T22:00:00+09:00"
 category: 学習習慣
 thread: false
