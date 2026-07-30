@@ -1,12 +1,12 @@
 ---
-status: 承認済み
-scheduled_at: "2026-07-30T18:00:00+09:00"
+status: 投稿済み
+scheduled_at: '2026-07-30T18:00:00+09:00'
 category: 学習習慣
 thread: false
-posted_at:
-tweet_ids: []
+posted_at: '2026-07-30T18:00:31.204678+09:00'
+tweet_ids:
+- '2082753192706670714'
 ---
-
 # 投稿文
 
 外部サービスにGitHubのトークンを預けるとき、Classic PATを渡すのは家の合鍵を渡すのに近い。
