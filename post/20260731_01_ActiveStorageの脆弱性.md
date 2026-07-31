@@ -9,11 +9,12 @@ tweet_ids: []
 
 # 投稿文
 
-Rails の Active Storage に Critical の脆弱性が出てる。CVSS 9.5。
+Rails の Active Storage に Critical の脆弱性。CVSS 9.5。
 
-7.0 以降はデフォルト設定のまま対象になるので、画像アップロードを受け付けてるアプリは先にバージョンだけ見た方がいいです。
+7.0 以降はデフォルトのまま対象になるので、画像を受け付けてるアプリは先にバージョンを見た方がいいです。
 
-調べたことをまとめます👇
+GMO Flatt Security さんの解説を軸にまとめます👇
+https://blog.flatt.tech/entry/kindarails2shell_rails
 
 ===
 
