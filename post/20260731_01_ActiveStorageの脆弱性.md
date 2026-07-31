@@ -36,21 +36,15 @@ Debian や Ubuntu 系の libvips は、ImageMagick に処理を丸ごと投げ�
 
 しかも、どのローダーを使うかは拡張子じゃなくファイルの中身で決まる。
 
-.jpg で受け取ったつもりでも中身次第で別のローダーが動く。判定してるのは自分のコードじゃなく libvips なので、拡張子チェックも Content-Type 検証もすり抜ける。
-
-===
-
-libvips は、壊れた入力での検証が済んでない処理に unfuzzed という印を付けてる。信頼できない入力に使うな、という意味。
-
-Active Storage 側でこれを無効化してなかったので、細工したファイルからその経路を呼べてしまう。
+libvips は検証が済んでない処理に unfuzzed という印を付けてるんだけど、Active Storage 側でそれを無効化してなかった。拡張子チェックも Content-Type 検証もすり抜ける。
 
 ===
 
 一番刺さったのはここ。
 
-Rails は :mini_magick 経路には -write や -path を禁止するガードを実装してた。
+Rails は :mini_magick 経路には -write などを禁じるガードを実装してた。でもそれは if variant_processor == :mini_magick で囲まれてる。
 
-でもそのガードは if variant_processor == :mini_magick で囲まれてる。デフォルトが :vips に変わった時点で、一度も通らなくなってた。
+デフォルトが :vips に変わった時点で、そのガードは一度も通らなくなってた。
 
 ===
 
