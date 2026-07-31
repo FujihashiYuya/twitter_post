@@ -1,5 +1,5 @@
 ---
-status: 承認済み
+status: 予約済み
 scheduled_at: "2026-07-31T15:00:00+09:00"
 category: 技術ログ
 thread: true
