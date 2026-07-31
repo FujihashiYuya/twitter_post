@@ -18,23 +18,45 @@ https://blog.flatt.tech/entry/kindarails2shell_rails
 
 ===
 
-何が起きたか。
+まず前提。
 
-Rails 7.0 で画像処理のデフォルトが ImageMagick から libvips に変わった。
+Rails 7.0 の load_defaults から、Active Storage の画像処理は variant_processor = :vips がデフォルトになってる。
 
-けど Debian や Ubuntu 系の libvips は中で ImageMagick に処理を投げるビルドになっていて、消えたと思っていたものが裏に残っていた。
-
-===
-
-厄介なのは、どのローダーを使うかを拡張子ではなくファイルの中身で決めるところ。
-
-.jpg で受け取ったつもりでも別形式の処理が動く。判定してるのは自分のコードじゃなく libvips なので、拡張子チェックも Content-Type 検証も効かない。
+自分で設定した覚えがなくても :vips で動いてる。むしろ何も書いてないアプリほど当てはまる。
 
 ===
 
-「サムネイル出してないから大丈夫」にはならないらしい。
+核心はここ。
 
-添付した時点で解析ジョブが走って libvips がファイルを開く。アドバイザリにも「variant の生成は別途の要件ではない」と書いてあった。ここは勘違いしてた。
+Debian や Ubuntu 系の libvips は、ImageMagick に処理を丸ごと投げる magick loader を有効にしてビルドされてる。
+
+設定は :vips なのに ImageMagick は消えてなくて、裏に残ってた。
+
+===
+
+しかも、どのローダーを使うかは拡張子じゃなくファイルの中身で決まる。
+
+.jpg で受け取ったつもりでも中身次第で別のローダーが動く。判定してるのは自分のコードじゃなく libvips なので、拡張子チェックも Content-Type 検証もすり抜ける。
+
+===
+
+libvips は、壊れた入力での検証が済んでない処理に unfuzzed という印を付けてる。信頼できない入力に使うな、という意味。
+
+Active Storage 側でこれを無効化してなかったので、細工したファイルからその経路を呼べてしまう。
+
+===
+
+一番刺さったのはここ。
+
+Rails は :mini_magick 経路には -write や -path を禁止するガードを実装してた。
+
+でもそのガードは if variant_processor == :mini_magick で囲まれてる。デフォルトが :vips に変わった時点で、一度も通らなくなってた。
+
+===
+
+「サムネイル出してないから大丈夫」にもならない。
+
+添付した時点で after_create_commit から解析ジョブが走って libvips がファイルを開く。アドバイザリにも「variant の生成は別途の要件ではない」と書いてあった。ここは勘違いしてた。
 
 ===
 
