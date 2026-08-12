@@ -1,12 +1,12 @@
 ---
-status: 承認済み
-scheduled_at: "2026-08-12T12:00:00+09:00"
+status: 投稿済み
+scheduled_at: '2026-08-12T12:00:00+09:00'
 category: ツール活用
 thread: false
-posted_at:
-tweet_ids: []
+posted_at: '2026-08-12T12:00:30.990210+09:00'
+tweet_ids:
+- '2087373637099622870'
 ---
-
 # 投稿文
 
 Claude CodeはCIの中でも動かせる。
